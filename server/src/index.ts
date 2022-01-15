@@ -7,7 +7,7 @@ import pingRouter from "./ping";
 
 dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
-const PORT = process.env.SERVER_PORT || 3001;
+const PORT = process.env.PORT || 3001;
 const CLIENT_BUILD_RELATIVE_PATH = "../../client/build";
 const NODE_ENV =
   process.env.NODE_ENV === "production" ? "production" : "development";

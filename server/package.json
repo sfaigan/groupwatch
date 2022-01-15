@@ -4,7 +4,7 @@
   "description": "",
   "main": "./build/index.js",
   "scripts": {
-    "prestart": "tsc -p .",
+    "build": "tsc -p .",
     "start": "node build/index.js",
     "dev": "concurrently \"tsc -w -p .\" \"nodemon build/index.js\"",
     "test": "echo \"Error: no test specified\" && exit 1"
