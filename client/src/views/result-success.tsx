@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import {
     ChakraProvider,
     Box,
@@ -10,9 +11,12 @@ import {
   } from "@chakra-ui/react"
 import { ColorModeSwitcher } from "../ColorModeSwitcher"
 import { View } from "../constants";
+import { MainContext } from "../context/main";
+
 
 export const ResultSuccess = ({ setView }: { setView: (view: View) => void }) => {
-    
+  const { isHost } = useContext(MainContext);
+
     const handleNegative = () => {
        setView(View.LANDING); //TODO resume the list
     }
@@ -21,6 +25,27 @@ export const ResultSuccess = ({ setView }: { setView: (view: View) => void }) =>
       setView(View.READY_TO_WATCH);
     }
 
+    var footer = <Text
+      fontWeight='bold'
+    >
+      Shea is confirming the movie
+      </Text>;
+    if (isHost) {
+      footer = 
+        <>
+          <Text 
+            textAlign='center'
+            fontWeight='bold'
+            fontSize='4xl'
+            >
+              Choose this movie?
+          </Text>
+          <Box display='flex' justifyContent='space-between' width='100%'>
+            <Button colorScheme={'red'} size='md' width='20%' onClick={handleNegative}>No</Button>
+            <Button colorScheme={'green'} size='md' width='20%' onClick={handlePositive}>Yes</Button>
+          </Box>
+        </>
+    }
     return (
       <ChakraProvider theme={theme}>
         <Box fontSize="xl">
@@ -58,17 +83,7 @@ export const ResultSuccess = ({ setView }: { setView: (view: View) => void }) =>
                 </Box>
               </Box>
               <Box width='100%' pt='1%'>
-                <Text 
-                  textAlign='center'
-                  fontWeight='bold'
-                  fontSize='4xl'
-                  >
-                    Choose this movie?
-                </Text>
-                <Box display='flex' justifyContent='space-between' width='100%'>
-                  <Button colorScheme={'red'} size='md' width='20%' onClick={handleNegative}>No</Button>
-                  <Button colorScheme={'green'} size='md' width='20%' onClick={handlePositive}>Yes</Button>
-                </Box>
+                {footer}
               </Box>
             </VStack>
           </Grid>

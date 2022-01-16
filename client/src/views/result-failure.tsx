@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import {
     ChakraProvider,
     Box,
@@ -12,11 +13,15 @@ import { useState } from "react";
 import { ColorModeSwitcher } from "../ColorModeSwitcher"
 import { MovieEntry } from "../components/movie-entry";
 import { View } from "../constants";
+import { MainContext } from "../context/main";
+
 
 export const ResultFailure = ({ setView }: { setView: (view: View) => void }) => {
-    const [isDisabled, setDisabled] = useState(false);
+    const [isDisabled, setDisabled] = useState(true);
     const [selected, setSelected] = useState(-1);
     const movies = [{name: 'Shrek 3', id: 1}, {name: 'Shrek 1', id: 4}, {name: 'Shrek 2', id: 55}, {name: 'Shrek 4', id: 12}, {name: 'Shrek 5', id: 68}];
+
+    const { isHost } = useContext(MainContext);
 
     const handleConfirm = () => {
       // TODO pass on confirmed movie to context provider
@@ -26,9 +31,22 @@ export const ResultFailure = ({ setView }: { setView: (view: View) => void }) =>
     const updateSelected = (movie: number) => {
       if (selected === movie) {
         setSelected(-1);
+        setDisabled(true);
       } else {
         setSelected(movie);
+        setDisabled(false);
       }
+    }
+
+    var footer = <Text
+        fontWeight='bold'
+      >
+      Shea is confirming the movie
+      </Text>;
+    if (isHost) {
+      footer = 
+          <Button colorScheme={'purple'} size='md' width='80%' isDisabled={isDisabled} onClick={handleConfirm}>Confirm movie</Button>
+
     }
 
     return (
@@ -55,13 +73,13 @@ export const ResultFailure = ({ setView }: { setView: (view: View) => void }) =>
                     return <MovieEntry 
                       text={movie.name} 
                       onSelect={() => updateSelected(movie.id)}
-                      onOpen={() => setView(View.LANDING)} // TODO movie info screen
+                      onOpen={() => setView(View.MOVIE_VOTE_RESULTS)}
                       selected={selected === movie.id}/>
                   })
                 }
                 
               </Box>
-              <Button colorScheme={'purple'} size='md' width='80%' isDisabled={isDisabled} onClick={handleConfirm}>Confirm movie</Button>
+              {footer}
             </VStack>
           </Grid>
         </Box>

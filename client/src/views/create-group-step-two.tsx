@@ -20,7 +20,7 @@ import { UsersContext } from "../context/users";
 export const CreateGroupStepTwo = ({ setView }: { setView: (view: View) => void }) => {
   const socket = useContext<any>(SocketContext);
   const [isDisabled, setDisabled] = useState(true);
-  const { setUsers } = useContext(UsersContext);
+  const {setUsers } = useContext(UsersContext);
   const { groupCode, setGroupCode, isHost, name, streamingServices, genres, setGenres } = useContext(MainContext);
   const toast = useToast();
 
@@ -101,21 +101,25 @@ export const CreateGroupStepTwo = ({ setView }: { setView: (view: View) => void 
     });
   };
 
+  var header;
+  if (!isHost) {
+    header = <Text 
+      fontWeight={'bold'}
+      fontSize="4xl"
+    >
+      Group: {groupCode}
+    </Text>
+  }
+
   return (
     <ChakraProvider theme={theme}>
       <Box fontSize="xl">
         <Grid p={3}>
           <ColorModeSwitcher justifySelf="flex-end" />
           <VStack spacing={1}>
+            {header}
             <Text 
               fontWeight={'bold'}
-              // width={[
-              //   '100%',
-              //   null,
-              //   null,
-              //   null,
-              //   null,
-              // ]}
               fontSize='md'
             >
               What genre(s) do you want to watch?
