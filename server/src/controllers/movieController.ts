@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import { MovieDb } from "moviedb-promise";
-import { DiscoverMovieResponse } from "moviedb-promise/dist/request-types";
+import { MovieResponse } from "moviedb-promise/dist/request-types";
 import { Request, Response } from "express";
 
 dotenv.config();
@@ -24,7 +24,7 @@ export async function GetMoviesByGenresAndProvider(
   genreIds?: string,
   providers?: string,
   page = 1
-): Promise<DiscoverMovieResponse> {
+): Promise<MovieResponse[]> {
   try {
     if (!genreIds || !providers) {
       throw new Error("Missing genreIds or providers");
@@ -38,9 +38,39 @@ export async function GetMoviesByGenresAndProvider(
       with_genres: genreIds,
       with_watch_providers: providers,
       page,
+      include_adult: false,
     });
 
-    return res;
+    if (!res || !res.results) {
+      throw new Error("No results");
+    }
+
+    // gets the details of the movies
+    const movies = await Promise.all(
+      res.results.map(async (movie) => {
+        const details = await moviedb.movieInfo({
+          id: `${movie.id}`,
+          append_to_response: "credits",
+        });
+        return details;
+      })
+    );
+
+    // filter out movie data that we don't need
+    const filteredMovies = movies.map((movie) => {
+      return {
+        id: movie.id,
+        title: movie.title,
+        poster_path: movie.poster_path,
+        overview: movie.overview,
+        release_date: movie.release_date,
+        vote_average: movie.vote_average,
+        genres: movie.genres,
+        duration: movie.runtime,
+      };
+    });
+
+    return filteredMovies;
   } catch (err) {
     console.log(err);
     throw err;
