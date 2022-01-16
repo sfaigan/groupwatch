@@ -51,10 +51,11 @@ export const LandingPage = ({ setView }: { setView: (view: View) => void }) => {
         <VStack spacing={8}>
           <Logo h="40vmin" pointerEvents="none" />
           <Text fontWeight={"bold"} fontSize="xl">
-            App Name
+            GroupWatch
           </Text>
           <Input
             placeholder="Enter name"
+            maxWidth={250}
             value={name}
             onChange={handleNameChange}
           />
@@ -68,7 +69,10 @@ export const LandingPage = ({ setView }: { setView: (view: View) => void }) => {
           </Button>
           <Text lineHeight="22px">OR</Text>
           <Input
-            placeholder="Enter group code"
+            placeholder="Enter code"
+            textAlign={"center"}
+            max={6}
+            maxWidth={110}
             value={groupCodeInput}
             onChange={handleGroupCodeInputChange}
           />
