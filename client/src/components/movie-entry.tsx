@@ -1,8 +1,6 @@
-import { InfoOutlineIcon, SearchIcon } from "@chakra-ui/icons";
+import { InfoOutlineIcon } from "@chakra-ui/icons";
 
-import {
-  Button, ButtonGroup, IconButton,
-} from "@chakra-ui/react"
+import { Button, ButtonGroup } from "@chakra-ui/react";
 
 interface Props {
   text: string;
@@ -12,18 +10,32 @@ interface Props {
 }
 
 export const MovieEntry = ({ text, onSelect, selected, onOpen }: Props) => {
-var badgeLabel = "Select";
-var opacityVar;
-if (selected) {
+  var badgeLabel = "Select";
+  var opacityVar;
+  if (selected) {
     badgeLabel = "Unselect";
-    opacityVar = "0.5"
-}
+    opacityVar = "0.5";
+  }
   return (
-    <ButtonGroup isAttached width='100%' mt='10px'>
-      <Button rightIcon={<InfoOutlineIcon />} justifyContent='space-between' colorScheme='purple' variant='outline' width='100%' onClick={onOpen}>
+    <ButtonGroup isAttached width="100%" mt="10px">
+      <Button
+        rightIcon={<InfoOutlineIcon />}
+        justifyContent="space-between"
+        colorScheme="purple"
+        variant="outline"
+        width="100%"
+        onClick={onOpen}
+      >
         {text}
       </Button>
-      <Button colorScheme='purple' variant='outline' isActive={selected} onClick={onSelect}>{badgeLabel}</Button>
+      <Button
+        colorScheme="purple"
+        variant="outline"
+        isActive={selected}
+        onClick={onSelect}
+      >
+        {badgeLabel}
+      </Button>
     </ButtonGroup>
-  )
-}
+  );
+};
