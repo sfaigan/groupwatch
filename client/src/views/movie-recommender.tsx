@@ -63,7 +63,7 @@ const iconMap = {
 };
 
 interface Props {
-  callback: any;
+  setView: any;
 }
 
 // icon is the key of iconMap
@@ -85,7 +85,7 @@ const InfoChip = ({ icon, value }: { icon: string; value: string }) => {
   );
 };
 
-export const MovieRecommender = ({ callback }: Props) => {
+export const MovieRecommender = ({ setView }: Props) => {
   return (
     <ChakraProvider theme={theme}>
       <Box textAlign="center" fontSize="xl">
@@ -140,21 +140,21 @@ export const MovieRecommender = ({ callback }: Props) => {
               <Button
                 backgroundColor={theme.colors.red[400]}
                 size="lg"
-                onClick={() => callback("no")}
+                onClick={() => setView("no")}
               >
                 No
               </Button>
               <Button
                 backgroundColor={theme.colors.blue[400]}
                 size="lg"
-                onClick={() => callback("maybe")}
+                onClick={() => setView("maybe")}
               >
                 Maybe
               </Button>
               <Button
                 backgroundColor={theme.colors.green[400]}
                 size="lg"
-                onClick={() => callback("yes")}
+                onClick={() => setView("yes")}
               >
                 Yes
               </Button>
