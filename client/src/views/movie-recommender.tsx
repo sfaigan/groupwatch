@@ -28,13 +28,14 @@ export const MovieRecommender = ({
   const socket = useContext<any>(SocketContext);
   const { userId, isHost, groupCode } = useContext(MainContext);
   const { movie, loading, error, setVote } = useMovie();
-  const { result, setResult } = useContext(ResultContext);
+  const { result, setResult, setProviders } = useContext(ResultContext);
 
   useEffect(() => {
-    socket.on("matchFound", (movie: any): void => {
+    socket.on("matchFound", (movie: any, providers: any): void => {
       console.log("Users updated.");
       console.log(movie);
       setResult(movie);
+      setProviders(providers);
     });
     if (result?.id) {
       setView(View.RESULT_SUCCESS);

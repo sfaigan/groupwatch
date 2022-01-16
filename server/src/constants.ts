@@ -21,12 +21,12 @@ export const GENRE_MAP = {
 };
 
 export const PROVIDER_MAP = {
-  8: "Netflix",
-  9: "Amazon Prime Video",
-  119: "Amazon Prime Video",
-  337: "Disney+",
-  350: "Apple TV+",
-  230: "Crave",
+  "8": "Netflix",
+  "9": "Amazon Prime Video",
+  "119": "Amazon Prime Video",
+  "337": "Disney+",
+  "350": "Apple TV+",
+  "230": "Crave",
 };
 
 export const VOTE_YES = "yes";

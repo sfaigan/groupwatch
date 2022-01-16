@@ -3,7 +3,7 @@ import { Box, Text, VStack, Grid, Button, Image } from "@chakra-ui/react";
 import { ColorModeSwitcher } from "../ColorModeSwitcher";
 import { View } from "../constants";
 import { MainContext } from "../context/main";
-import { ResultContext } from "../context/result";
+import { Provider, ResultContext } from "../context/result";
 import { formatImageURL } from "../helpers";
 import { Genre, Movie } from "../hooks/useMovie";
 import MovieDetailsChipList from "../components/movie-details-chip-list";
@@ -15,7 +15,7 @@ export const ResultSuccess = ({
   setView: (view: View) => void;
 }) => {
   const { isHost } = useContext(MainContext);
-  const { result, setResult } = useContext(ResultContext);
+  const { result, setResult, providers, setProviders } = useContext(ResultContext);
 
   useEffect(() => {
     console.log(result);
@@ -23,6 +23,7 @@ export const ResultSuccess = ({
 
   const handleNegative = () => {
     setResult({} as Movie);
+    setProviders([] as Provider[]);
     setView(View.MOVIE_RECOMMENDER);
   };
 
@@ -30,7 +31,7 @@ export const ResultSuccess = ({
     setView(View.READY_TO_WATCH);
   };
 
-  var footer = <Text fontWeight="bold">The host is confirming the movie</Text>;
+  var footer = <Text fontWeight="bold">The host is confirming the movie.</Text>;
   if (isHost) {
     footer = (
       <>
@@ -79,7 +80,7 @@ export const ResultSuccess = ({
               {result.title}
             </Text>
             <Text fontSize="sm">{result.overview}</Text>
-            <MovieDetailsChipList  movie={result}/>
+            <MovieDetailsChipList movie={result} providers={providers}/>
           </VStack>
           <Box width="100%" pt="1%">
             {footer}

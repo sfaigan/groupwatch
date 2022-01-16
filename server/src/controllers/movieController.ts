@@ -43,6 +43,18 @@ export async function GetMovie(id: string) {
   };
 }
 
+export async function getMovieProviders(id: string): Promise<any[]> {
+  const watchProviders = await moviedb.movieWatchProviders({
+    id
+  });
+
+  if (!watchProviders || !watchProviders.results || !watchProviders.results.CA) {
+    return [];
+  }
+
+  return watchProviders!.results!.CA!.flatrate || [];
+}
+
 export async function GetMoviesByGenresAndProvider(
   genreIds?: string,
   providers?: string,

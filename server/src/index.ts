@@ -18,7 +18,8 @@ import {
 } from "./controllers/groups";
 import { addGroup, addUserToGroupCache, createCache, getGroupSize, getMovieData, getYesVotes, incrementMaybeCountByUser, incrementNoCountByUser, incrementYesCountByUser, removeUserFromGroup, setUserVote, updateGroupData } from "./cache";
 import { union } from "./helper";
-import { GetMovie } from "./controllers/movieController";
+import { GetMovie, getMovieProviders } from "./controllers/movieController";
+import { PROVIDER_MAP } from "./constants";
 
 dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
@@ -124,7 +125,8 @@ io.on("connection", (socket) => {
     if (groupSize === yesVotes.length) {
       console.log("Match found");
       const movie = await GetMovie(movieId);
-      io.in(groupId).emit("matchFound", movie);
+      const providers = await getMovieProviders(movieId);
+      io.in(groupId).emit("matchFound", movie, providers);
     }
     callback();
   })
