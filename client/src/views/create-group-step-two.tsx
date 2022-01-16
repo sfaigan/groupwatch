@@ -24,7 +24,7 @@ export const CreateGroupStepTwo = ({ setView }: { setView: (view: View) => void 
   const socket = useContext<any>(SocketContext);
   const { setUsers } = useContext(UsersContext);
   const [isDisabled, setDisabled] = useState(false);
-  const { groupCode, name, streamingServices, genres, setGenres } = useContext(MainContext);
+  const { groupCode, setGroupCode, isHost, name, streamingServices, genres, setGenres } = useContext(MainContext);
   const toast = useToast();
 
   useEffect(() => {
@@ -49,9 +49,9 @@ export const CreateGroupStepTwo = ({ setView }: { setView: (view: View) => void 
 
   const handleCreateGroup = () => {
     socket.connect();
-    socket.emit("createGroup", name, streamingServices, genres, (groupCode?: string, error?: string) => {
-      console.log(`Attempting to create group ${groupCode}...`);
-      if (error) {
+    socket.emit("createGroup", name, streamingServices, genres, (newGroupCode?: string, error?: string) => {
+      console.log(`Attempting to create group ${newGroupCode}...`);
+      if (error || !newGroupCode) {
         console.log(error);
         return toast({
           title: "Error",
@@ -62,11 +62,12 @@ export const CreateGroupStepTwo = ({ setView }: { setView: (view: View) => void 
           isClosable: true,
         });
       }
-      console.log(`Successfully created group ${groupCode}!`);
+      console.log(`Successfully created group ${newGroupCode}!`);
+      setGroupCode(newGroupCode);
       setView(View.GROUP_START);
       return toast({
         title: "Welcome to the group!",
-        description: `Created group ${groupCode}`,
+        description: `Created group ${newGroupCode}`,
         status: "success",
         duration: 4000,
         position: "top",
@@ -129,7 +130,15 @@ export const CreateGroupStepTwo = ({ setView }: { setView: (view: View) => void 
                 />
               })
             }
-            <Button colorScheme={'purple'} size='md' width='80%' isDisabled={isDisabled} onClick={groupCode ? handleJoinGroup : handleCreateGroup}>Create Group</Button>
+            <Button
+              colorScheme={'purple'}
+              size='md'
+              width='80%'
+              isDisabled={isDisabled}
+              onClick={isHost ? handleCreateGroup : handleJoinGroup}
+            >
+              { isHost ? "Create Group" : "Join Group" }
+            </Button>
           </VStack>
         </Grid>
       </Box>

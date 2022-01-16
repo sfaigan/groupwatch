@@ -21,10 +21,9 @@ import { User, UsersContext } from "../context/users";
 import { SocketContext } from "../context/socket";
 
 export const GroupStart = ({ setView }: { setView: (view: View) => void }) => {
-  const { groupCode } = useContext(MainContext);
+  const { groupCode, isHost } = useContext(MainContext);
   const { users, setUsers } = useContext(UsersContext);
   const socket = useContext<any>(SocketContext);
-  const [isDisabled, setDisabled] = useState(false);
   
   // const members = [{name: "shea", type: BadgeType.READY}, {name: "adam", type: BadgeType.READY}, {name: "collin", type: BadgeType.READY}, {name: "Steve", type: BadgeType.NOBADGE}, {name: "Sarah", type: BadgeType.NOBADGE}] // TODO replace this with a call to the server
 
@@ -67,15 +66,26 @@ export const GroupStart = ({ setView }: { setView: (view: View) => void }) => {
                 })
               }
             </Box>
-
-            <Text 
-              fontWeight='bold'
-              fontSize='md'
-              position='relative'
-            >
-              You can start the list when everyone is ready.
-            </Text>
-            <Button colorScheme={'purple'} size='md' width='80%' isDisabled={isDisabled} onClick={onClick}>Start</Button>
+            { isHost ? (
+              <>
+                <Text 
+                  fontWeight='bold'
+                  fontSize='md'
+                  position='relative'
+                >
+                  You can start when everyone is ready.
+                </Text>
+                <Button colorScheme={'purple'} size='md' width='80%' onClick={onClick}>Start</Button>
+              </>
+            ) : (
+              <Text 
+                fontWeight='bold'
+                fontSize='md'
+                position='relative'
+              >
+                Please wait for the group leader to start.
+              </Text>
+            )}
           </VStack>
         </Grid>
       </Box>

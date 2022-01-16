@@ -16,8 +16,6 @@ import {
 import { ColorModeSwitcher } from "../ColorModeSwitcher"
 import { Logo } from "../Logo"
 import { MainContext } from "../context/main";
-import { SocketContext } from "../context/socket";
-import { UsersContext } from "../context/users";
 import { View } from "../constants";
 
 export interface Props {
@@ -25,7 +23,7 @@ export interface Props {
 }
 
 export const LandingPage = ({ setView }: { setView: (view: View) => void }) => {
-  const { name, setName, setGroupCode } = useContext(MainContext);
+  const { name, setName, setGroupCode, setIsHost } = useContext(MainContext);
   // const { setUserId } = useContext(UsersContext);
   const [isJoinDisabled, setJoinDisabled] = useState(true);
   const [isCreateDisabled, setCreateDisabled] = useState(true);
@@ -40,10 +38,15 @@ export const LandingPage = ({ setView }: { setView: (view: View) => void }) => {
       setJoinDisabled(!(name.length > 0 && groupCodeInput.length === 6));
     }
   };
+  
+  const onClickCreateGroup = () => {
+    setIsHost(true);
+    setView(View.CREATE_GROUP_STEP_TWO);
+  }
 
   const onClickJoinGroup = () => {
     setGroupCode(groupCodeInput);
-    setView(View.CREATE_GROUP_STEP_ONE)
+    setView(View.CREATE_GROUP_STEP_ONE);
   }
   
   const handleNameChange = (event: any) => {
@@ -79,7 +82,7 @@ export const LandingPage = ({ setView }: { setView: (view: View) => void }) => {
               onChange={handleNameChange}
               //width=...
             />
-            <Button isDisabled={isCreateDisabled} colorScheme={'purple'} size='md' onClick={() => setView(View.CREATE_GROUP_STEP_ONE)}>Create Group</Button>
+            <Button isDisabled={isCreateDisabled} colorScheme={'purple'} size='md' onClick={onClickCreateGroup}>Create Group</Button>
             <Text
               lineHeight='22px'>
               OR
