@@ -16,7 +16,7 @@ export const ButtonCheckBox = ({ text, onSelect }: Props) => {
     onSelect();
   }
   return (
-    <Button justifyContent='space-between' colorScheme='purple' variant='outline' width='80%' isActive={selected} onClick={onClick}>
+    <Button justifyContent='space-between' colorScheme='purple' variant='outline' width='80%' isActive={selected} onClick={onClick} mt='10px'>
       {text}
       <Checkbox isChecked={selected}/>
     </Button>

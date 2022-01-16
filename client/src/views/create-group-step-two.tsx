@@ -21,7 +21,7 @@ import { SocketContext } from "../context/socket";
 
 export const CreateGroupStepTwo = ({ setView }: { setView: (view: View) => void }) => {
   const socket = useContext<any>(SocketContext);
-  const [isDisabled, setDisabled] = useState(false);
+  const [isDisabled, setDisabled] = useState(true);
   const { groupCode, name, streamingServices, genres, setGenres } = useContext(MainContext);
   const toast = useToast();
 
@@ -35,6 +35,7 @@ export const CreateGroupStepTwo = ({ setView }: { setView: (view: View) => void 
       temp.push(genre);
       setGenres(temp);
     }
+    setDisabled(!(temp.length > 0));
   }
 
   const handleCreateGroup = () => {
@@ -111,14 +112,16 @@ export const CreateGroupStepTwo = ({ setView }: { setView: (view: View) => void 
             >
               What genre(s) do you want to watch?
             </Text>
-            {
-              Object.keys(Genre).map((key: string) => {
-                return <ButtonCheckBox
-                  onSelect= {() => updateGenres(Genre[key].id)}
-                  text={Genre[key].text}
-                />
-              })
-            }
+            <Box width='100%' textAlign='center' maxHeight='60%' overflow='scroll'>
+              {
+                Object.keys(Genre).map((key: string) => {
+                  return <ButtonCheckBox
+                    onSelect= {() => updateGenres(Genre[key].id)}
+                    text={Genre[key].text}
+                  />
+                })
+              }
+            </Box>
             <Button colorScheme={'purple'} size='md' width='80%' isDisabled={isDisabled} onClick={handleCreateGroup}>Create Group</Button>
           </VStack>
         </Grid>
