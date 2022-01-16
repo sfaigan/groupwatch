@@ -25,12 +25,10 @@ export interface Props {
 }
 
 export const LandingPage = ({ setView }: { setView: (view: View) => void }) => {
-  const socket = useContext<any>(SocketContext);
   const { name, setName, groupCode, setGroupCode } = useContext(MainContext);
   // const { setUserId } = useContext(UsersContext);
   const [isJoinDisabled, setJoinDisabled] = useState(true);
   const [isCreateDisabled, setCreateDisabled] = useState(true);
-  const toast = useToast();
 
   const handleGroupCodeChange = (event: any) => {
     const newVal = event.target.value.toUpperCase();
@@ -55,60 +53,6 @@ export const LandingPage = ({ setView }: { setView: (view: View) => void }) => {
   //     setUserId(user);
   //   })
   // });
-
-  const handleCreateGroup = () => {
-    socket.connect();
-    socket.emit("createGroup", name, (groupCode?: string, error?: string) => {
-      console.log(`Attempting to create group ${groupCode}...`);
-      if (error) {
-        console.log(error);
-        return toast({
-          title: "Error",
-          description: error,
-          status: "error",
-          duration: 4000,
-          position: "top",
-          isClosable: true,
-        });
-      }
-      console.log(`Successfully created group ${groupCode}!`);
-      setView(View.CREATE_GROUP_STEP_ONE);
-      return toast({
-        title: "Welcome to the group!",
-        description: `Created group ${groupCode}`,
-        status: "success",
-        duration: 4000,
-        position: "top",
-        isClosable: true,
-      });
-    });
-  };
-
-  const handleJoinGroup = () => {
-    socket.connect();
-    socket.emit("joinGroup", name, groupCode, (error: string) => {
-      console.log(`Attempting to join group ${groupCode}...`);
-      if (error) {
-        console.log(error);
-        return toast({
-          title: "Error",
-          description: error,
-          status: "error",
-          duration: 4000,
-          position: "top",
-          isClosable: true,
-        });
-      }
-      return toast({
-        title: "Welcome to the group!",
-        description: `Joined group ${groupCode}`,
-        status: "success",
-        duration: 4000,
-        position: "top",
-        isClosable: true,
-      });
-    });
-  };
 
   return (
     <ChakraProvider theme={theme}>
@@ -136,7 +80,7 @@ export const LandingPage = ({ setView }: { setView: (view: View) => void }) => {
               onChange={handleNameChange}
               //width=...
             />
-            <Button isDisabled={isCreateDisabled} colorScheme={'purple'} size='md' onClick={handleCreateGroup}>Create Group</Button>
+            <Button isDisabled={isCreateDisabled} colorScheme={'purple'} size='md' onClick={() => setView(View.CREATE_GROUP_STEP_ONE)}>Create Group</Button>
             <Text
               lineHeight='22px'>
               OR
@@ -147,7 +91,7 @@ export const LandingPage = ({ setView }: { setView: (view: View) => void }) => {
               onChange={handleGroupCodeChange}
               //width=...
             />
-            <Button colorScheme={'purple'} isDisabled={isJoinDisabled} onClick={handleJoinGroup}>Join Group</Button>
+            <Button colorScheme={'purple'} isDisabled={isJoinDisabled} onClick={() => setView(View.CREATE_GROUP_STEP_ONE)}>Join Group</Button>
           </VStack>
         </Grid>
       </Box>
