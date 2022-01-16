@@ -203,6 +203,23 @@ export function setUserData(
   roomCache.get<Room>(roomCode)!.users[userId] = data;
 }
 
+export function updateUserData(
+  roomCode: string,
+  userId: string,
+  data: {
+    name?: string;
+    socketId?: string;
+    ready?: boolean;
+    isHost?: boolean;
+    page?: number;
+  }
+) {
+  roomCache.get<Room>(roomCode)!.users[userId] = {
+    ...roomCache.get<Room>(roomCode)!.users[userId],
+    ...data,
+  };
+}
+
 export function getUserVotes(roomCode: string, userId: string) {
   return roomCache.get<Room>(roomCode)!.movies[
     roomCache.get<Room>(roomCode)!.users[userId].page
@@ -248,6 +265,7 @@ export default {
   setUserPage,
   getUserData,
   setUserData,
+  updateUserData,
   getUserVotes,
   setUserVote,
   getMovieData,
