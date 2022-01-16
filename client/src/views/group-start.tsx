@@ -12,22 +12,18 @@ import {
     FormLabel,
     Switch,
   } from "@chakra-ui/react"
-  import { ColorModeSwitcher } from "../ColorModeSwitcher"
+import { ColorModeSwitcher } from "../ColorModeSwitcher"
 import { MemberEntry } from "../components/member-entry";
-import { BadgeType } from "../constants/badge-types";
+import { BadgeType } from "../constants";
+import { View } from "../constants";
 
-export interface Props {
-    callback: any;
-    // isLeader: boolean;
-}
-
-export const GroupListScreen = (props: Props) =>{
+export const GroupStart = ({ setView }: { setView: (view: View) => void }) => {
     const [isDisabled, setDisabled] = useState(false);
     
     const members = [{name: "shea", type: BadgeType.READY}, {name: "adam", type: BadgeType.READY}, {name: "collin", type: BadgeType.READY}, {name: "Steve", type: BadgeType.NOBADGE}, {name: "Sarah", type: BadgeType.NOBADGE}] // TODO replace this with a call to the server
 
     const onClick = () => {
-       props.callback(4);
+       setView(View.LANDING);
     }
 
     const code = "XXXXXX";

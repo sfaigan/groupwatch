@@ -4,7 +4,7 @@ import {
     Button,
     Checkbox,
   } from "@chakra-ui/react"
-import { BadgeProps, BadgeType } from "../constants/badge-types"
+import { BadgeProps, BadgeType } from "../constants"
 export interface Props {
     text: string;
     //callback: any; //TODO allow parent to see whether this is selected

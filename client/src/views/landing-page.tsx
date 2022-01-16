@@ -18,15 +18,16 @@ import { Logo } from "../Logo"
 import { MainContext } from "../context/main";
 import { SocketContext } from "../context/socket";
 import { UsersContext } from "../context/users";
+import { View } from "../constants";
 
 export interface Props {
   callback: any;
 }
 
-export const LandingPage = (props: Props) => {
+export const LandingPage = ({ setView }: { setView: (view: View) => void }) => {
   const socket = useContext<any>(SocketContext);
   const { name, setName, groupCode, setGroupCode } = useContext(MainContext);
-  const { setUserId } = useContext(UsersContext);
+  // const { setUserId } = useContext(UsersContext);
   const [isDisabled, setDisabled] = useState(true);
   const toast = useToast();
 
@@ -62,6 +63,7 @@ export const LandingPage = (props: Props) => {
         });
       }
       console.log(`Successfully created group ${groupCode}!`);
+      setView(View.CREATE_GROUP_STEP_ONE);
       return toast({
         title: "Welcome to the group!",
         description: `Created group ${groupCode}`,
@@ -98,10 +100,6 @@ export const LandingPage = (props: Props) => {
       });
     });
   };
-
-  const onClick = () => {
-    props.callback(1);
-  }
 
   return (
     <ChakraProvider theme={theme}>

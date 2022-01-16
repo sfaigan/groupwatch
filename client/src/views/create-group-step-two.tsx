@@ -12,20 +12,17 @@ import {
     FormLabel,
     Switch,
   } from "@chakra-ui/react"
-  import { ColorModeSwitcher } from "../ColorModeSwitcher"
+import { ColorModeSwitcher } from "../ColorModeSwitcher"
 import { ButtonCheckBox } from "../components/button-checkbox";
+import { View } from "../constants";
 
-export interface Props {
-    callback: any;
-}
-
-export const CreateGroupScreenTwo = (props: Props) =>{
+export const CreateGroupStepTwo = ({ setView }: { setView: (view: View) => void }) => {
     const [isDisabled, setDisabled] = useState(false);
     
     const genres = ["Drama", "Action", "Comedy", "Horror", "Thriller", "Science Fiction", "Romance", "Documentary"]
 
     const onClick = () => {
-       props.callback(3);
+       setView(View.GROUP_START)
     }
 
 
