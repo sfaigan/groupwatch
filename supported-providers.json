@@ -1,0 +1,38 @@
+[
+  {
+    "display_priority": 0,
+    "logo_path": "/9A1JSVmSxsyaBK4SUFsYVqbAYfW.jpg",
+    "provider_name": "Netflix",
+    "provider_id": 8
+  },
+  {
+    "display_priority": 1,
+    "logo_path": "/68MNrwlkpF7WnmNPXLah69CR5cb.jpg",
+    "provider_name": "Amazon Prime Video",
+    "provider_id": 119
+  },
+  {
+    "display_priority": 1,
+    "logo_path": "/68MNrwlkpF7WnmNPXLah69CR5cb.jpg",
+    "provider_name": "Amazon Prime Video",
+    "provider_id": 9
+  },
+  {
+    "display_priority": 1,
+    "logo_path": "/dgPueyEdOwpQ10fjuhL2WYFQwQs.jpg",
+    "provider_name": "Disney Plus",
+    "provider_id": 337
+  },
+  {
+    "display_priority": 2,
+    "logo_path": "/A3WLxoSkmuxwaQkpfwL6H8WwWwM.jpg",
+    "provider_name": "Apple TV Plus",
+    "provider_id": 350
+  },
+  {
+    "display_priority": 3,
+    "logo_path": "/vlrNqT2tFHRY6oGh1Bt7HIOHsjF.jpg",
+    "provider_name": "Crave",
+    "provider_id": 230
+  }
+]
