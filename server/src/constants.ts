@@ -19,5 +19,3 @@ export const GENRE_MAP = {
   10752: "War",
   37: "Western",
 };
-
-export const TMDB_API = "https://api.themoviedb.org/3";
