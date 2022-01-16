@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import {
-  ChakraProvider,
   theme,
   Box,
   Grid,
@@ -23,7 +22,11 @@ function formatImageURL(path: string) {
   return `https://image.tmdb.org/t/p/w500${path}`;
 }
 
-export const MovieRecommender = ({ setView }: { setView: (view: View) => void }) => {
+export const MovieRecommender = ({
+  setView,
+}: {
+  setView: (view: View) => void;
+}) => {
   const socket = useContext<any>(SocketContext);
   const { userId, isHost, groupCode } = useContext(MainContext);
   const { movie, loading, error, setVote } = useMovie();
@@ -31,40 +34,33 @@ export const MovieRecommender = ({ setView }: { setView: (view: View) => void })
   const handleMovieVote = (vote: "yes" | "no" | "maybe") => {
     if (movie) {
       console.log("Voting...");
-      socket.emit(
-        "movieVote",
-        groupCode,
-        movie.id,
-        vote,
-        (error: string) => {
-          console.log(`Voting ${vote} for ${movie.title}.`);
-          if (error) {
-            console.log(error);
-            return;
-          }
-          setVote(true);
-          console.log(`Successfully voted ${vote} for ${movie.title}.`);
+      socket.emit("movieVote", groupCode, movie.id, vote, (error: string) => {
+        console.log(`Voting ${vote} for ${movie.title}.`);
+        if (error) {
+          console.log(error);
           return;
         }
-      );
+        setVote(true);
+        console.log(`Successfully voted ${vote} for ${movie.title}.`);
+        return;
+      });
     }
   };
 
   return (
-    <ChakraProvider theme={theme}>
-      <Box textAlign="center" fontSize="xl">
-        <Grid p={4}>
-          {isHost && (
-            <Button
-              backgroundColor={theme.colors.red[400]}
-              justifySelf="flex-start"
-              position="absolute"
-            >
-              Stop
-            </Button>
-          )}
-          <ColorModeSwitcher justifySelf="flex-end" />
-          {!loading && !error && movie && (
+    <Box textAlign="center" fontSize="xl">
+      <Grid p={4}>
+        {isHost && (
+          <Button
+            backgroundColor={theme.colors.red[400]}
+            justifySelf="flex-start"
+            position="absolute"
+          >
+            Stop
+          </Button>
+        )}
+        <ColorModeSwitcher justifySelf="flex-end" />
+        {!loading && !error && movie && (
           <VStack spacing={3} padding={4}>
             <Image src={formatImageURL(movie.poster_path)} />
             <Text fontWeight={"bold"} fontSize="xl">
@@ -74,12 +70,10 @@ export const MovieRecommender = ({ setView }: { setView: (view: View) => void })
             <MovieDetailsChipList movie={movie} />
             <MovieVoteButtons handleMovieVote={handleMovieVote} />
           </VStack>
-          )
-          }
-          {loading && <Spinner />}
-        </Grid>
-      </Box>
-    </ChakraProvider>
+        )}
+        {loading && <Spinner />}
+      </Grid>
+    </Box>
   );
 };
 
