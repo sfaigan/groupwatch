@@ -1,19 +1,7 @@
-import React, { SyntheticEvent, useState } from "react"
+import {useState} from 'react'
 import { createBreakpoints } from '@chakra-ui/theme-tools';
-import {
-  ChakraProvider,
-  Box,
-  Text,
-  Link,
-  VStack,
-  Code,
-  Input,
-  Grid,
-  theme,
-  Button,
-} from "@chakra-ui/react"
-import { ColorModeSwitcher } from "./ColorModeSwitcher"
-import { Logo } from "./Logo"
+
+import { CreateGroupScreenOne } from './views/create-group-screen-1';
 import { LandingPage } from "./views/landing-page";
 
 const breakpoints = createBreakpoints({
@@ -24,12 +12,14 @@ const breakpoints = createBreakpoints({
 })
 
 export const App = () => { 
-  
-    return (<LandingPage/>)
-  // const [view, setView] = useState(0);
-  // var render;
-  // switch (view) {
-  //   case 0: render=<LandingPage/>
-  // }
-  // return (render)
+  const [view, setView] = useState(0);
+  var render;
+  if (view === 0) {
+    render = <LandingPage callback={setView}/>
+  } else if (view === 1) {
+    render = <CreateGroupScreenOne callback={setView}/>
+  } else {
+    render = <LandingPage callback={setView}/>
+  }
+  return (render);
 }

@@ -15,7 +15,11 @@ import {
   import { ColorModeSwitcher } from "../ColorModeSwitcher"
   import { Logo } from "../Logo"
 
-export const LandingPage = () =>{
+export interface Props {
+  callback: any;
+}
+
+export const LandingPage = (props: Props) =>{
     const [isDisabled, setDisabled] = useState(true);
     const [value, setValue] = React.useState('')
     const handleChange = (event: any) => {
@@ -24,6 +28,10 @@ export const LandingPage = () =>{
         setValue(newVal)
       }
       setDisabled(!(event.target.value.length === 6 || value.length === 6))
+    }
+
+    const onClick = () => {
+      props.callback(1);
     }
 
     return (
@@ -46,7 +54,7 @@ export const LandingPage = () =>{
               >
                 App Name
               </Text>
-              <Button colorScheme={'purple'} size='md'>Create Group</Button>
+              <Button colorScheme={'purple'} size='md' onClick={onClick}>Create Group</Button>
               <Text
                 lineHeight='22px'>
                 OR
