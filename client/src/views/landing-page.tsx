@@ -28,17 +28,26 @@ export const LandingPage = ({ setView }: { setView: (view: View) => void }) => {
   const socket = useContext<any>(SocketContext);
   const { name, setName, groupCode, setGroupCode } = useContext(MainContext);
   // const { setUserId } = useContext(UsersContext);
-  const [isDisabled, setDisabled] = useState(true);
+  const [isJoinDisabled, setJoinDisabled] = useState(true);
+  const [isCreateDisabled, setCreateDisabled] = useState(true);
   const toast = useToast();
 
   const handleGroupCodeChange = (event: any) => {
     const newVal = event.target.value.toUpperCase();
     if (newVal.length <= 6 && /^[A-Z0-9]*$/g.test(newVal)) {
-      setGroupCode(newVal)
+      setGroupCode(newVal);
+      setJoinDisabled(!(name.length > 0 && newVal.length === 6));
+    } else {
+      setJoinDisabled(!(name.length > 0 && groupCode.length === 6));
     }
-    setDisabled(!(event.target.value.length === 6 || groupCode.length === 6))
   };
-
+  
+  const handleNameChange = (event: any) => {
+    const newVal = event.target.value;
+    setJoinDisabled(!(groupCode.length === 6 && newVal.length > 0));
+    setCreateDisabled(!(newVal.length > 0));
+    setName(newVal);
+  }
   // useEffect(() => {
   //   socket.on("users", (user: any): void => {
   //     console.log("HELLO!");
@@ -124,10 +133,10 @@ export const LandingPage = ({ setView }: { setView: (view: View) => void }) => {
             <Input 
               placeholder='Enter name'
               value={name}
-              onChange={e => setName(e.target.value)}
+              onChange={handleNameChange}
               //width=...
             />
-            <Button colorScheme={'purple'} size='md' onClick={handleCreateGroup}>Create Group</Button>
+            <Button isDisabled={isCreateDisabled} colorScheme={'purple'} size='md' onClick={handleCreateGroup}>Create Group</Button>
             <Text
               lineHeight='22px'>
               OR
@@ -138,7 +147,7 @@ export const LandingPage = ({ setView }: { setView: (view: View) => void }) => {
               onChange={handleGroupCodeChange}
               //width=...
             />
-            <Button colorScheme={'purple'} isDisabled={isDisabled} onClick={handleJoinGroup}>Join Group</Button>
+            <Button colorScheme={'purple'} isDisabled={isJoinDisabled} onClick={handleJoinGroup}>Join Group</Button>
           </VStack>
         </Grid>
       </Box>
