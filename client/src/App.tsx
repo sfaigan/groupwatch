@@ -1,38 +1,46 @@
-import * as React from "react"
-import {
-  ChakraProvider,
-  Box,
-  Text,
-  Link,
-  VStack,
-  Code,
-  Grid,
-  theme,
-} from "@chakra-ui/react"
-import { ColorModeSwitcher } from "./ColorModeSwitcher"
-import { Logo } from "./Logo"
+import {useState} from 'react'
+import { createBreakpoints } from '@chakra-ui/theme-tools';
 
-export const App = () => (
-  <ChakraProvider theme={theme}>
-    <Box textAlign="center" fontSize="xl">
-      <Grid minH="100vh" p={3}>
-        <ColorModeSwitcher justifySelf="flex-end" />
-        <VStack spacing={8}>
-          <Logo h="40vmin" pointerEvents="none" />
-          <Text>
-            Edit <Code fontSize="xl">src/App.tsx</Code> and save to reload.
-          </Text>
-          <Link
-            color="teal.500"
-            href="https://chakra-ui.com"
-            fontSize="2xl"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn Chakra
-          </Link>
-        </VStack>
-      </Grid>
-    </Box>
-  </ChakraProvider>
-)
+import { LandingPage } from "./views/landing-page";
+import { CreateGroupStepOne } from './views/create-group-step-one';
+import { CreateGroupStepTwo } from './views/create-group-step-two';
+import { GroupStart } from './views/group-start';
+import { MainProvider } from "./context/main"
+import { UsersProvider } from "./context/users"
+import { SocketProvider } from "./context/socket"
+import { View } from './constants';
+
+const breakpoints = createBreakpoints({
+  sm: '30em',
+  md: '48em',
+  lg: '62em',
+  xl: '80em',
+})
+
+export const App = () => { 
+  const [view, setView] = useState(0);
+
+  const getView = () => {
+    switch (view) {
+      case View.CREATE_GROUP_STEP_ONE:
+        return <CreateGroupStepOne setView={setView}/>
+      case View.CREATE_GROUP_STEP_TWO:
+        return <CreateGroupStepTwo setView={setView}/>
+      case View.GROUP_START:
+        return <GroupStart setView={setView}/>
+      case View.LANDING:
+      default:
+        return <LandingPage setView={setView}/>
+    }
+  }
+
+  return (
+    <MainProvider>
+      <UsersProvider>
+        <SocketProvider>
+          {getView()}
+        </SocketProvider>
+      </UsersProvider>
+    </MainProvider>
+  )
+};
