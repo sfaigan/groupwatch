@@ -6,6 +6,7 @@ export enum View {
   RESULT_SUCCESS,
   RESULT_FAILURE,
   READY_TO_WATCH,
+  MOVIE_VOTE_RESULTS,
 }
 
 export enum BadgeType {

@@ -12,6 +12,7 @@ import { View } from './constants';
 import { ResultSuccess } from './views/result-success';
 import { ReadyToWatch } from './views/ready-to-watch';
 import { ResultFailure } from './views/result-failure';
+import { MovieVoteResults } from './views/movie-vote-results';
 
 const breakpoints = createBreakpoints({
   sm: '30em',
@@ -22,7 +23,7 @@ const breakpoints = createBreakpoints({
 
 export const App = () => { 
   const [view, setView] = useState(0);
-  // const [view, setView] = useState(View.RESULT_FAILURE);
+  // const [view, setView] = useState(View.MOVIE_VOTE_RESULTS);
   const getView = () => {
     switch (view) {
       case View.CREATE_GROUP_STEP_ONE:
@@ -32,11 +33,13 @@ export const App = () => {
       case View.GROUP_START:
         return <GroupStart setView={setView}/>
       case View.RESULT_SUCCESS:
-        return <ResultSuccess setView={setView} />
+        return <ResultSuccess setView={setView}/>
       case View.RESULT_FAILURE:
-        return <ResultFailure setView={setView} />
+        return <ResultFailure setView={setView}/>
       case View.READY_TO_WATCH:
-        return <ReadyToWatch setView={setView} />
+        return <ReadyToWatch setView={setView}/>
+      case View.MOVIE_VOTE_RESULTS:
+        return <MovieVoteResults setView={setView}/>
       case View.LANDING:
       default:
         return <LandingPage setView={setView}/>
