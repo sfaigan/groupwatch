@@ -13,46 +13,75 @@ export const ReadyToWatch = ({
       link: "https://www.themoviedb.org/movie/808-shrek/watch",
     },
     {
-      label: "Amazon",
+      label: "Apple TV+",
       link: "https://tv.apple.com/us/movie/shrek/umc.cmc.1xebq6b6acn6az49exa5ybl1c",
     },
+    {
+      label: "Amazon Prime Video",
+      link: "https://www.amazon.com/gp/video/offers/signup?ref_=atv_mv_mv_signup",
+    },
   ];
-  // TODO get links from movie
 
   return (
     <Box fontSize="xl">
       <Grid p={5}>
         <ColorModeSwitcher justifySelf="flex-end" />
-        <VStack spacing={1}>
+        <VStack spacing={5}>
           <Text
             fontWeight="bold"
             fontSize="4xl"
             width="80%"
             textAlign="center"
-            pb="20%"
+            pb="5%"
           >
             Great, you're ready to watch!
           </Text>
-          <Box width="100%" pb="10%">
-            <Text fontWeight="bold" fontSize="4xl" textAlign="center">
+          <VStack width="100%" pb="10%" spacing={2}>
+            <Text
+              fontWeight="bold"
+              fontSize="4xl"
+              textAlign="center"
+              paddingBottom={4}
+            >
               Watch on...
             </Text>
             {links.map((movie, index) => (
-              <Text textDecoration="underline" pb="20px">
-                <Link
-                  href={movie.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {movie.label}
-                </Link>
-              </Text>
+              <Link
+                title={movie.label}
+                style={{ userSelect: "none" }}
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                flexDirection="row"
+                variant="ghost"
+                borderRadius="xl"
+                borderWidth={1}
+                borderColor={"current"}
+                p={2}
+                padding={2}
+                mb={4}
+                width={"50%"}
+                href={movie.link}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button variant={"ghost"}>{movie.label}</Button>
+              </Link>
             ))}
-          </Box>
+          </VStack>
+          <Text
+            marginTop={4}
+            fontSize="2xl"
+            textAlign="center"
+            paddingBottom={4}
+          >
+            Or, start another group:
+          </Text>
           <Button
             colorScheme={"purple"}
             size="md"
             width="80%"
+            maxWidth={"33%"}
             onClick={() => setView(View.LANDING)}
           >
             Done
