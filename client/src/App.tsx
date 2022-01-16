@@ -5,6 +5,9 @@ import { CreateGroupScreenOne } from './views/create-group-screen-1';
 import { LandingPage } from "./views/landing-page";
 import { CreateGroupScreenTwo } from './views/create-group-screen-2';
 import { GroupListScreen } from './views/group list screen';
+import { MainProvider } from "./context/main"
+import { UsersProvider } from "./context/users"
+import { SocketProvider } from "./context/socket"
 
 const breakpoints = createBreakpoints({
   sm: '30em',
@@ -27,5 +30,14 @@ export const App = () => {
   } else {
     render = <LandingPage callback={setView}/>
   }
-  return (render);
-}
+
+  return (
+    <MainProvider>
+      <UsersProvider>
+        <SocketProvider>
+          (render)
+        </SocketProvider>
+      </UsersProvider>
+    </MainProvider>
+  )
+};
