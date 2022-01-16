@@ -6,8 +6,7 @@
   "scripts": {
     "build": "tsc -p .",
     "start": "node build/index.js",
-    "dev": "nodemon src/index.ts",
-    "dev:debug": "nodemon --inspect src/index.ts",
+    "dev": "concurrently \"tsc -w -p .\" \"nodemon build/index.js\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,23 +21,16 @@
   "homepage": "https://github.com/sfaigan/groupwatch#readme",
   "devDependencies": {
     "@tsconfig/node16": "^1.0.2",
-    "@types/compression": "^1.7.2",
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
-    "@types/node-cache": "^4.2.5",
     "nodemon": "^2.0.15",
-    "ts-node": "^10.4.0",
     "tsconfig-paths": "^3.12.0",
     "typescript": "^4.5.4"
   },
   "dependencies": {
     "body-parser": "^1.19.1",
-    "compression": "^1.7.4",
     "cors": "^2.8.5",
     "dotenv": "^12.0.3",
-    "express": "^4.17.2",
-    "moviedb-promise": "^3.1.12",
-    "node-cache": "^5.1.2",
-    "socket.io": "^4.4.1"
+    "express": "^4.17.2"
   }
 }

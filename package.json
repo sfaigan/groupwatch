@@ -28,8 +28,8 @@
   "bugs": {
     "url": "https://github.com/sfaigan/groupwatch/issues"
   },
-  "homepage": "https://github.com/sfaigan/groupwatch#readme",
   "engines": {
     "node": "16.13.2"
-  }
+  },
+  "homepage": "https://github.com/sfaigan/groupwatch#readme"
 }
