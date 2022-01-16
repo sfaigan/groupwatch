@@ -14,8 +14,10 @@
     "build": "(npm run client:build); (npm run server:build);",
     "start": "npm run server:prod",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "(cd client && npm install); (cd server && npm install);",
-    "heroku-postbuild": "npm run build"
+    "heroku-postbuild": "npm run build",
+    "ci:client": "cd client && npm ci",
+    "ci:server": "cd server && npm ci",
+    "postinstall": "concurrently \"npm run ci:client\" \"npm run ci:server\""
   },
   "repository": {
     "type": "git",
