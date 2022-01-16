@@ -1,4 +1,4 @@
-import { Wrap, Box, Text } from "@chakra-ui/react";
+import { Wrap, Box, Text, VStack } from "@chakra-ui/react";
 import { Provider } from "../context/result";
 import { Movie } from "../hooks/useMovie";
 import MovieDetailChip from "./movie-detail-chip";
@@ -11,11 +11,23 @@ function formatDuration(duration: number) {
 
 interface Props {
   movie: Movie;
-  providers: Provider;
+  providers?: Provider[];
+}
+
+const getProvidersList = (providers: Provider[]) => {
+  return (
+    <Box>
+      <Text fontWeight="bold">Available on:</Text>
+      {providers.map((provider) => {
+        return <MovieDetailChip key={provider.provider_id} icon={"genre"} value={provider.provider_name} />
+      })}
+    </Box>
+  )
 }
 
 const MovieDetailsChipList = ({ movie, providers }: Props) => {
     return (
+      <VStack>
         <Wrap>
           <MovieDetailChip
             key={movie.release_date}
@@ -35,11 +47,10 @@ const MovieDetailsChipList = ({ movie, providers }: Props) => {
           {movie.genres.map((genre) => (
             <MovieDetailChip key={genre.id} icon={"genre"} value={genre.name} />
           ))}
-          <Box>
-            <Text fontWeight="bold">Available on:</Text>
-            providers.map((provider) => (<MovieDetailChip key={providers.provider_id} icon={"genre"} value={provider.provider_name} />));
-          </Box>
-      </Wrap>
+        </Wrap>
+        {providers && getProvidersList(providers)}
+      </VStack>
+      
     )
 }
 

@@ -16,7 +16,7 @@ import {
   getUser,
   getUsersInGroup,
 } from "./controllers/groups";
-import { addGroup, addUserToGroupCache, createCache, getGroupSize, getMovieData, getYesVotes, incrementMaybeCountByUser, incrementNoCountByUser, incrementYesCountByUser, removeUserFromGroup, setUserVote, updateGroupData } from "./cache";
+import { addGroup, addUserToGroupCache, createCache, getGroupSize, getMovieData, getUserIds, getYesVotes, incrementMaybeCountByUser, incrementNoCountByUser, incrementYesCountByUser, removeUserFromGroup, setUserVote, updateGroupData } from "./cache";
 import { union } from "./helper";
 import { GetMovie, getMovieProviders } from "./controllers/movieController";
 import { PROVIDER_MAP } from "./constants";
@@ -114,13 +114,14 @@ io.on("connection", (socket) => {
       updateGroupData(groupId, "genres", genres);
     }
 
+    io.in(groupId).emit("hostStartedSearch");
     callback();
   })
 
   socket.on("movieVote", async (groupId, movieId, vote, callback) => {
     console.log("Accepting vote...");
     setUserVote(groupId, socket.id, movieId, vote);
-    const groupSize = getGroupSize(groupId);
+    const groupSize = getUserIds(groupId).length;
     const yesVotes = getYesVotes(groupId, movieId)
     if (groupSize === yesVotes.length) {
       console.log("Match found");

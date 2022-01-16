@@ -35,6 +35,12 @@ export const CreateGroupStepTwo = ({
       setUsers(users);
     });
   });
+  
+  useEffect(() => {
+    socket.on("hostStartedSearch", () => {
+      setView(View.MOVIE_RECOMMENDER);
+    });
+  });
 
   const updateGenres = (genre: number) => {
     const index = genres.findIndex((value: number) => value === genre);

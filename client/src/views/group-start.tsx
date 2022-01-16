@@ -26,11 +26,11 @@ export const GroupStart = ({ setView }: { setView: (view: View) => void }) => {
     setView(View.MOVIE_RECOMMENDER);
   };
 
-  // useEffect(() => {
-  //   socket.on("startSearch", (groupCode: string, callback: any) => {
-  //     setView(View.MOVIE_RECOMMENDER);
-  //   });
-  // });
+  useEffect(() => {
+    socket.on("hostStartedSearch", () => {
+      setView(View.MOVIE_RECOMMENDER);
+    });
+  }, []);
 
   return (
     <Box fontSize="xl">
