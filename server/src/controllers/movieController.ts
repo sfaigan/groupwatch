@@ -2,20 +2,23 @@ import dotenv from "dotenv";
 import { MovieDb } from "moviedb-promise";
 import { MovieResponse } from "moviedb-promise/dist/request-types";
 import { Request, Response } from "express";
+import { getRoomUserInfo } from "../cache";
 
 dotenv.config();
 const moviedb = new MovieDb(process.env.TMDB_API_KEY_V3 || "none_in_env");
 
 export async function GetMovies(req: Request, res: Response): Promise<void> {
-  let { genres, provider, page } = req.query;
-  // convert page from string to number
-  const pageNum = Number(page);
-  console.log({ genres, provider, page });
+  let { roomCode, userId } = req.query;
+  // get room genres, providers, and user's page
+  console.log({roomCode, userId});
+
+  const { genres, providers, page } = getRoomUserInfo(roomCode as string, userId as string);
+  console.log({genres, providers, page});
   res.json(
     await GetMoviesByGenresAndProvider(
-      genres as string,
-      provider as string,
-      pageNum
+      genres.join(","),
+      providers.join(","),
+      page
     )
   );
 }

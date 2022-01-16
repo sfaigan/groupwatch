@@ -27,6 +27,8 @@ export function useMovie() {
 
   const [vote, setVote] = useState(false);
 
+  console.log({userId, groupCode});
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -50,8 +52,8 @@ export function useMovie() {
   // TODO: make this more efficient
   useEffect(() => {
     if (vote) {
-      setMovie(movieList[0]);
       setMovieList(movieList.slice(1));
+      setMovie(movieList[0]);
       setVote(false);
       // will cause re-rendering once
     }

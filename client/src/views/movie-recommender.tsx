@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import {
   ChakraProvider,
   theme,
@@ -7,8 +8,9 @@ import {
   Image,
   Text,
   Button,
+  Spinner,
 } from "@chakra-ui/react";
-import { useContext } from "react";
+
 import { ColorModeSwitcher } from "../ColorModeSwitcher";
 import MovieDetailsChipList from "../components/movie-details-chip-list";
 import MovieVoteButtons from "../components/movie-vote-buttons";
@@ -71,6 +73,7 @@ export const MovieRecommender = ({ setView }: Props) => {
             </Button>
           )}
           <ColorModeSwitcher justifySelf="flex-end" />
+          {!loading && !error && movie && (
           <VStack spacing={3} padding={4}>
             <Image src={formatImageURL(movie.poster_path)} />
             <Text fontWeight={"bold"} fontSize="xl">
@@ -80,6 +83,9 @@ export const MovieRecommender = ({ setView }: Props) => {
             <MovieDetailsChipList movie={movie} />
             <MovieVoteButtons handleMovieVote={handleMovieVote} />
           </VStack>
+          )
+          }
+          {loading && <Spinner />}
         </Grid>
       </Box>
     </ChakraProvider>

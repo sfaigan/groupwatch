@@ -16,11 +16,13 @@ export const roomCache = new NodeCache({
 //          [userId: string]: {
 //              name: string,
 //              socketId: string,
-//              ready: boolean,
 //              isHost: boolean,
 //              page: number,
 //          },
 //       },
+//       topMovies: {
+//              id: number,
+//       }[],
 //       movies: {
 //          [movieId: number]: {
 //              yesCount: number,
@@ -89,6 +91,22 @@ export function addRoom(
     users: {},
     movies: {},
   });
+}
+
+export function getRoomUserInfo(roomCode: string, userId: string) {
+  const room = roomCache.get<Room>(roomCode);
+  if (!room) {
+    throw new Error("Room does not exist");
+  }
+  const user = room!.users[userId];
+  if (!user) {
+    throw new Error("User does not exist");
+  }
+  return {
+    genres: room!.genres,
+    providers: room!.providers,
+    page: user.page,
+  };
 }
 
 /**
