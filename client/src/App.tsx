@@ -15,6 +15,9 @@ import {
 import { ColorModeSwitcher } from "./ColorModeSwitcher"
 import { Logo } from "./Logo"
 import { LandingPage } from "./views/landing-page";
+import { MainProvider } from "./context/main"
+import { UsersProvider } from "./context/users"
+import { SocketProvider } from "./context/socket"
 
 const breakpoints = createBreakpoints({
   sm: '30em',
@@ -23,13 +26,15 @@ const breakpoints = createBreakpoints({
   xl: '80em',
 })
 
-export const App = () => { 
-  
-    return (<LandingPage/>)
-  // const [view, setView] = useState(0);
-  // var render;
-  // switch (view) {
-  //   case 0: render=<LandingPage/>
-  // }
-  // return (render)
-}
+export const App = () => (
+  <ChakraProvider theme={theme}>
+    <MainProvider>
+      <UsersProvider>
+        <SocketProvider>
+          <LandingPage/>
+        </SocketProvider>
+      </UsersProvider>
+    </MainProvider>
+    
+  </ChakraProvider>
+)
