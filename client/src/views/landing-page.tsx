@@ -3,21 +3,16 @@ import {
     ChakraProvider,
     Box,
     Text,
-    Link,
     VStack,
-    Code,
     Input,
     Grid,
     theme,
     Button,
-    useToast,
   } from "@chakra-ui/react"
 
 import { ColorModeSwitcher } from "../ColorModeSwitcher"
 import { Logo } from "../Logo"
 import { MainContext } from "../context/main";
-import { SocketContext } from "../context/socket";
-import { UsersContext } from "../context/users";
 import { View } from "../constants";
 
 export interface Props {
@@ -25,34 +20,38 @@ export interface Props {
 }
 
 export const LandingPage = ({ setView }: { setView: (view: View) => void }) => {
-  const { name, setName, groupCode, setGroupCode } = useContext(MainContext);
+  const { name, setName, setGroupCode, setIsHost } = useContext(MainContext);
   // const { setUserId } = useContext(UsersContext);
   const [isJoinDisabled, setJoinDisabled] = useState(true);
   const [isCreateDisabled, setCreateDisabled] = useState(true);
+  const [groupCodeInput, setGroupCodeInput] = useState("");
 
-  const handleGroupCodeChange = (event: any) => {
+  const handleGroupCodeInputChange = (event: any) => {
     const newVal = event.target.value.toUpperCase();
     if (newVal.length <= 6 && /^[A-Z0-9]*$/g.test(newVal)) {
-      setGroupCode(newVal);
+      setGroupCodeInput(newVal);
       setJoinDisabled(!(name.length > 0 && newVal.length === 6));
     } else {
-      setJoinDisabled(!(name.length > 0 && groupCode.length === 6));
+      setJoinDisabled(!(name.length > 0 && groupCodeInput.length === 6));
     }
   };
   
+  const onClickCreateGroup = () => {
+    setIsHost(true);
+    setView(View.CREATE_GROUP_STEP_ONE);
+  }
+
+  const onClickJoinGroup = () => {
+    setGroupCode(groupCodeInput);
+    setView(View.CREATE_GROUP_STEP_ONE);
+  }
+  
   const handleNameChange = (event: any) => {
     const newVal = event.target.value;
-    setJoinDisabled(!(groupCode.length === 6 && newVal.length > 0));
+    setJoinDisabled(!(groupCodeInput.length === 6 && newVal.length > 0));
     setCreateDisabled(!(newVal.length > 0));
     setName(newVal);
   }
-  // useEffect(() => {
-  //   socket.on("users", (user: any): void => {
-  //     console.log("HELLO!");
-  //     console.log(user);
-  //     setUserId(user);
-  //   })
-  // });
 
   return (
     <ChakraProvider theme={theme}>
@@ -63,13 +62,6 @@ export const LandingPage = ({ setView }: { setView: (view: View) => void }) => {
             <Logo h="40vmin" pointerEvents="none" />
             <Text 
               fontWeight={'bold'}
-              // width={[
-              //   '100%',
-              //   null,
-              //   null,
-              //   null,
-              //   null,
-              // ]}
               fontSize='xl'
             >
               App Name
@@ -78,20 +70,18 @@ export const LandingPage = ({ setView }: { setView: (view: View) => void }) => {
               placeholder='Enter name'
               value={name}
               onChange={handleNameChange}
-              //width=...
             />
-            <Button isDisabled={isCreateDisabled} colorScheme={'purple'} size='md' onClick={() => setView(View.CREATE_GROUP_STEP_ONE)}>Create Group</Button>
+            <Button isDisabled={isCreateDisabled} colorScheme={'purple'} size='md' onClick={onClickCreateGroup}>Create Group</Button>
             <Text
               lineHeight='22px'>
               OR
             </Text>
             <Input 
               placeholder='Enter group code'
-              value={groupCode}
-              onChange={handleGroupCodeChange}
-              //width=...
+              value={groupCodeInput}
+              onChange={handleGroupCodeInputChange}
             />
-            <Button colorScheme={'purple'} isDisabled={isJoinDisabled} onClick={() => setView(View.CREATE_GROUP_STEP_ONE)}>Join Group</Button>
+            <Button colorScheme={'purple'} isDisabled={isJoinDisabled} onClick={onClickJoinGroup}>Join Group</Button>
           </VStack>
         </Grid>
       </Box>

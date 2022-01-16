@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useState, useContext } from "react"
+import { useState, useContext, useEffect } from "react"
 
 import {
     ChakraProvider,
@@ -8,9 +8,6 @@ import {
     Grid,
     theme,
     Button,
-    FormControl,
-    FormLabel,
-    Switch,
     useToast,
   } from "@chakra-ui/react"
 import { ColorModeSwitcher } from "../ColorModeSwitcher"
@@ -18,12 +15,22 @@ import { ButtonCheckBox } from "../components/button-checkbox";
 import { View, Genre } from "../constants";
 import { MainContext } from "../context/main";
 import { SocketContext } from "../context/socket";
+import { UsersContext } from "../context/users";
 
 export const CreateGroupStepTwo = ({ setView }: { setView: (view: View) => void }) => {
   const socket = useContext<any>(SocketContext);
   const [isDisabled, setDisabled] = useState(true);
-  const { groupCode, name, streamingServices, genres, setGenres } = useContext(MainContext);
+  const { setUsers } = useContext(UsersContext);
+  const { groupCode, setGroupCode, isHost, name, streamingServices, genres, setGenres } = useContext(MainContext);
   const toast = useToast();
+
+  useEffect(() => {
+    socket.on("users", (users: any): void => {
+      console.log("Users updated.");
+      console.log(users);
+      setUsers(users)
+    })
+  });
 
   const updateGenres = (genre: number) => {
     const index = genres.findIndex((value: number) => value === genre);
@@ -40,9 +47,9 @@ export const CreateGroupStepTwo = ({ setView }: { setView: (view: View) => void 
 
   const handleCreateGroup = () => {
     socket.connect();
-    socket.emit("createGroup", name, streamingServices, genres, (groupCode?: string, error?: string) => {
-      console.log(`Attempting to create group ${groupCode}...`);
-      if (error) {
+    socket.emit("createGroup", name, streamingServices, genres, (newGroupCode?: string, error?: string) => {
+      console.log(`Attempting to create group ${newGroupCode}...`);
+      if (error || !newGroupCode) {
         console.log(error);
         return toast({
           title: "Error",
@@ -53,11 +60,12 @@ export const CreateGroupStepTwo = ({ setView }: { setView: (view: View) => void 
           isClosable: true,
         });
       }
-      console.log(`Successfully created group ${groupCode}!`);
+      console.log(`Successfully created group ${newGroupCode}!`);
+      setGroupCode(newGroupCode);
       setView(View.GROUP_START);
       return toast({
         title: "Welcome to the group!",
-        description: `Created group ${groupCode}`,
+        description: `Created group ${newGroupCode}`,
         status: "success",
         duration: 4000,
         position: "top",
@@ -122,7 +130,16 @@ export const CreateGroupStepTwo = ({ setView }: { setView: (view: View) => void 
                 })
               }
             </Box>
-            <Button colorScheme={'purple'} size='md' width='80%' isDisabled={isDisabled} onClick={handleCreateGroup}>Create Group</Button>
+
+            <Button
+              colorScheme={'purple'}
+              size='md'
+              width='80%'
+              isDisabled={isDisabled}
+              onClick={isHost ? handleCreateGroup : handleJoinGroup}
+            >
+              { isHost ? "Create Group" : "Join Group" }
+            </Button>
           </VStack>
         </Grid>
       </Box>
