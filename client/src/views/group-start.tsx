@@ -23,7 +23,7 @@ export const GroupStart = ({ setView }: { setView: (view: View) => void }) => {
     const members = [{name: "shea", type: BadgeType.READY}, {name: "adam", type: BadgeType.READY}, {name: "collin", type: BadgeType.READY}, {name: "Steve", type: BadgeType.NOBADGE}, {name: "Sarah", type: BadgeType.NOBADGE}] // TODO replace this with a call to the server
 
     const onClick = () => {
-       setView(View.LANDING);
+       setView(View.RESULT_SUCCESS);
     }
 
     const code = "XXXXXX";

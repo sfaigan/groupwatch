@@ -2,7 +2,8 @@ export enum View {
   LANDING,
   CREATE_GROUP_STEP_ONE,
   CREATE_GROUP_STEP_TWO,
-  GROUP_START
+  GROUP_START,
+  RESULT_SUCCESS,
 }
 
 export enum BadgeType {

@@ -9,6 +9,7 @@ import { MainProvider } from "./context/main"
 import { UsersProvider } from "./context/users"
 import { SocketProvider } from "./context/socket"
 import { View } from './constants';
+import { ResultSuccess } from './views/result-success';
 
 const breakpoints = createBreakpoints({
   sm: '30em',
@@ -28,6 +29,8 @@ export const App = () => {
         return <CreateGroupStepTwo setView={setView}/>
       case View.GROUP_START:
         return <GroupStart setView={setView}/>
+      case View.RESULT_SUCCESS:
+        return <ResultSuccess setView={setView} />
       case View.LANDING:
       default:
         return <LandingPage setView={setView}/>
