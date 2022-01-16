@@ -10,6 +10,10 @@ export const roomCache = new NodeCache({
 //       groupSize: number,
 //       users: {
 //          [userId: string]: {
+//              name: string,
+//              socketId: string,
+//              ready: boolean,
+//              isHost: boolean,
 //              page: number,
 //          },
 //       },
@@ -18,9 +22,11 @@ export const roomCache = new NodeCache({
 //              yesCount: number,
 //              noCount: number,
 //              maybeCount: number,
-//              yesVotes: [userIds],
-//              noVotes: [userIds],
-//              maybeVotes: [userIds],
+//              usersVotes: {
+//                  [userId: string]: {
+//                      vote: string,
+//                  },
+//              },
 //          },
 //       },
 //    }
@@ -41,14 +47,18 @@ export interface UserCache {
   };
 }
 
+export interface UserMovieVotes {
+  [userId: string]: {
+    vote: Vote;
+  };
+}
+
 export interface MovieCache {
   [movieId: number]: {
     yesCount: number;
     noCount: number;
     maybeCount: number;
-    yesVotes: string[];
-    noVotes: string[];
-    maybeVotes: string[];
+    userVotes: UserMovieVotes;
   };
 }
 
@@ -82,7 +92,9 @@ export function incrementYesCountByUser(
   userId: string
 ) {
   roomCache.get<Room>(roomCode)!.movies[movieId].yesCount++;
-  roomCache.get<Room>(roomCode)!.movies[movieId].yesVotes.push(userId);
+  roomCache.get<Room>(roomCode)!.movies[movieId].userVotes[userId] = {
+    vote: "yes",
+  };
 }
 
 /**
@@ -94,7 +106,9 @@ export function incrementNoCountByUser(
   userId: string
 ) {
   roomCache.get<Room>(roomCode)!.movies[movieId].noCount++;
-  roomCache.get<Room>(roomCode)!.movies[movieId].noVotes.push(userId);
+  roomCache.get<Room>(roomCode)!.movies[movieId].userVotes[userId] = {
+    vote: "no",
+  };
 }
 
 /**
@@ -109,19 +123,13 @@ export function incrementMaybeCountByUser(
   userId: string
 ) {
   roomCache.get<Room>(roomCode)!.movies[movieId].maybeCount++;
-  roomCache.get<Room>(roomCode)!.movies[movieId].maybeVotes.push(userId);
+  roomCache.get<Room>(roomCode)!.movies[movieId].userVotes[userId] = {
+    vote: "maybe",
+  };
 }
 
 export function getRoom(roomCode: string) {
   return roomCache.get(roomCode);
-}
-
-export function getUserPage(roomCode: string, userId: string) {
-  return roomCache.get<Room>(roomCode)!.users[userId].page;
-}
-
-export function setUserPage(roomCode: string, userId: string, page: number) {
-  roomCache.get<Room>(roomCode)!.users[userId].page = page;
 }
 
 export function getYesCount(roomCode: string, movieId: number) {
@@ -137,7 +145,112 @@ export function getMaybeCount(roomCode: string, movieId: number) {
 }
 
 export function getYesVotes(roomCode: string, movieId: number) {
-  return roomCache.get<Room>(roomCode)!.movies[movieId].yesVotes;
+  // returns an array of userIds who voted yes
+  return Object.keys(
+    roomCache.get<Room>(roomCode)!.movies[movieId].userVotes
+  ).filter(
+    (userId) =>
+      roomCache.get<Room>(roomCode)!.movies[movieId].userVotes[userId].vote ===
+      "yes"
+  );
 }
 
-export default roomCache;
+export function getNoVotes(roomCode: string, movieId: number) {
+  // returns an array of userIds who voted no
+  return Object.keys(
+    roomCache.get<Room>(roomCode)!.movies[movieId].userVotes
+  ).filter(
+    (userId) =>
+      roomCache.get<Room>(roomCode)!.movies[movieId].userVotes[userId].vote ===
+      "no"
+  );
+}
+
+export function getMaybeVotes(roomCode: string, movieId: number) {
+  // returns an array of userIds who voted maybe
+  return Object.keys(
+    roomCache.get<Room>(roomCode)!.movies[movieId].userVotes
+  ).filter(
+    (userId) =>
+      roomCache.get<Room>(roomCode)!.movies[movieId].userVotes[userId].vote ===
+      "maybe"
+  );
+}
+
+export function getUserPage(roomCode: string, userId: string) {
+  return roomCache.get<Room>(roomCode)!.users[userId].page;
+}
+
+export function setUserPage(roomCode: string, userId: string, page: number) {
+  roomCache.get<Room>(roomCode)!.users[userId].page = page;
+}
+
+export function getUserData(roomCode: string, userId: string) {
+  return roomCache.get<Room>(roomCode)!.users[userId];
+}
+
+export function setUserData(
+  roomCode: string,
+  userId: string,
+  data: {
+    name: string;
+    socketId: string;
+    ready: boolean;
+    isHost: boolean;
+    page: number;
+  }
+) {
+  roomCache.get<Room>(roomCode)!.users[userId] = data;
+}
+
+export function getUserVotes(roomCode: string, userId: string) {
+  return roomCache.get<Room>(roomCode)!.movies[
+    roomCache.get<Room>(roomCode)!.users[userId].page
+  ].userVotes[userId];
+}
+
+export function setUserVote(
+  roomCode: string,
+  userId: string,
+  movieId: number,
+  vote: Vote
+) {
+  roomCache.get<Room>(roomCode)!.movies[movieId].userVotes[userId] = {
+    vote,
+  };
+}
+
+export function getMovieData(roomCode: string, movieId: number) {
+  return roomCache.get<Room>(roomCode)!.movies[movieId];
+}
+
+export function getGroupSize(roomCode: string) {
+  return roomCache.get<Room>(roomCode)!.groupSize;
+}
+
+export function getUserIds(roomCode: string) {
+  return Object.keys(roomCache.get<Room>(roomCode)!.users);
+}
+
+export default {
+  addRoom,
+  incrementYesCountByUser,
+  incrementNoCountByUser,
+  incrementMaybeCountByUser,
+  getRoom,
+  getYesCount,
+  getNoCount,
+  getMaybeCount,
+  getYesVotes,
+  getNoVotes,
+  getMaybeVotes,
+  getUserPage,
+  setUserPage,
+  getUserData,
+  setUserData,
+  getUserVotes,
+  setUserVote,
+  getMovieData,
+  getGroupSize,
+  getUserIds,
+};
