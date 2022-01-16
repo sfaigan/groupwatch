@@ -6,11 +6,13 @@ export interface User {
   groupId: string;
   streamingServices?: number[];
   genres?: number[];
+  isHost: boolean;
 }
 
 const users: { [id: string]: User } = {};
 
 export const addUserToGroup = (userId: string, name: string, streamingServices: number[], genres: number[], groupId?: string) => {
+  let isHost = false;
   if (!groupId) {
     groupId = randomBytes(3).toString("hex").toString().toUpperCase();
   } else if (!groupExists(groupId)) {
@@ -22,6 +24,7 @@ export const addUserToGroup = (userId: string, name: string, streamingServices: 
     groupId,
     streamingServices,
     genres,
+    isHost,
   };
 
   users[userId] = user;

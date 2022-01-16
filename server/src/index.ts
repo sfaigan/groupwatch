@@ -16,8 +16,10 @@ import {
   getUser,
   getUsersInGroup,
 } from "./controllers/groups";
+import { addGroup, addUserToGroupCache, createCache, removeUserFromGroup, updateGroupData } from "./cache";
+import { union } from "./helper";
 
-dotenv.config({ path: path.resolve(__dirname, "../.env") });
+dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
 export const PORT = process.env.PORT || 3001;
 const CLIENT_BUILD_RELATIVE_PATH = "../../client/build";
@@ -70,6 +72,8 @@ io.on("connection", (socket) => {
       description: `${user.name} just joined the group!`,
     });
     io.in(groupId).emit("users", getUsersInGroup(groupId));
+    addGroup(groupId);
+    addUserToGroupCache(groupId, socket.id, { name, isHost: true });
     callback(groupId);
   });
 
@@ -88,8 +92,28 @@ io.on("connection", (socket) => {
     });
     io.in(groupId).emit("users", getUsersInGroup(groupId));
     console.log(getUsersInGroup(groupId));
+    addUserToGroupCache(groupId, socket.id, { name, isHost: false });
     callback();
   });
+
+  socket.on("startSearch", (groupId, callback) => {
+    console.log("Starting search...");
+    const users = getUsersInGroup(groupId);
+    const streamingServicesArrays = Object.entries(users).map(([userId, user]) => user.streamingServices!);
+    const genresArrays = Object.entries(users).map(([userId, user]) => user.genres!);
+
+    if (streamingServicesArrays.length > 0 ) {
+      const streamingServices = union(streamingServicesArrays);
+      updateGroupData(groupId, "streamingServices", streamingServices);
+    }
+
+    if (genresArrays.length > 0 ) {
+      const genres = union(genresArrays);
+      updateGroupData(groupId, "genres", genres);
+    }
+
+    callback();
+  })
 
   socket.on("sendMessage", (message) => {
     const user = getUser(socket.id);
@@ -107,12 +131,14 @@ io.on("connection", (socket) => {
         description: `${user.userName} just left the group.`,
       });
       io.in(user.groupId).emit("users", getUsersInGroup(user.groupId));
+      removeUserFromGroup(user.groupId, user.userId);
       console.log(getUsersInGroup(user.groupId));
     }
   });
 });
 
 // Initialize
+createCache();
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}...`);
 });

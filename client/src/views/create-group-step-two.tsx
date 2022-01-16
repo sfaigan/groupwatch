@@ -20,8 +20,8 @@ import { UsersContext } from "../context/users";
 export const CreateGroupStepTwo = ({ setView }: { setView: (view: View) => void }) => {
   const socket = useContext<any>(SocketContext);
   const [isDisabled, setDisabled] = useState(true);
-  const {setUsers } = useContext(UsersContext);
-  const { groupCode, setGroupCode, isHost, name, streamingServices, genres, setGenres } = useContext(MainContext);
+  const { setUsers } = useContext(UsersContext);
+  const { groupCode, setGroupCode, setUserId, isHost, name, streamingServices, genres, setGenres } = useContext(MainContext);
   const toast = useToast();
 
   useEffect(() => {
@@ -62,6 +62,7 @@ export const CreateGroupStepTwo = ({ setView }: { setView: (view: View) => void 
       }
       console.log(`Successfully created group ${newGroupCode}!`);
       setGroupCode(newGroupCode);
+      setUserId(socket.id);
       setView(View.GROUP_START);
       return toast({
         title: "Welcome to the group!",
@@ -89,6 +90,7 @@ export const CreateGroupStepTwo = ({ setView }: { setView: (view: View) => void 
           isClosable: true,
         });
       }
+      setUserId(socket.id);
       setView(View.GROUP_START);
       return toast({
         title: "Welcome to the group!",

@@ -1,0 +1,2 @@
+export const union = (arrays: any[][]) => { return arrays.reduce((a, b) => Array.from(new Set(a.concat(b)))) };
+export const intersection = (arrays: any[][]) => { return arrays.reduce((a, b) => a.filter(ele => b.includes(ele))) };

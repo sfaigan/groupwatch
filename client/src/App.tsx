@@ -23,7 +23,7 @@ const breakpoints = createBreakpoints({
 })
 
 export const App = () => { 
-  const [view, setView] = useState(0);
+  const [view, setView] = useState(View.LANDING);
   // const [view, setView] = useState(View.MOVIE_VOTE_RESULTS);
   const getView = () => {
     switch (view) {
@@ -33,6 +33,8 @@ export const App = () => {
         return <CreateGroupStepTwo setView={setView}/>
       case View.GROUP_START:
         return <GroupStart setView={setView}/>
+      case View.MOVIE_RECOMMENDER:
+        return <MovieRecommender setView={setView}/>
       case View.RESULT_SUCCESS:
         return <ResultSuccess setView={setView}/>
       case View.RESULT_FAILURE:
@@ -41,8 +43,6 @@ export const App = () => {
         return <ReadyToWatch setView={setView}/>
       case View.MOVIE_VOTE_RESULTS:
         return <MovieVoteResults setView={setView}/>
-      case View.MOVIE_RECOMMENDER:
-        return <MovieRecommender setView={setView}/>
       case View.LANDING:
       default:
         return <LandingPage setView={setView}/>

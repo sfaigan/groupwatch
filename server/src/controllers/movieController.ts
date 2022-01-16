@@ -1,23 +1,25 @@
 import dotenv from "dotenv";
+import path from "path";
 import { MovieDb } from "moviedb-promise";
 import { MovieResponse } from "moviedb-promise/dist/request-types";
 import { Request, Response } from "express";
-import { getRoomUserInfo } from "../cache";
+import { getGroupUserInfo } from "../cache";
+import { getTopVotedMovies } from "../cache";
 
-dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
 const moviedb = new MovieDb(process.env.TMDB_API_KEY_V3 || "none_in_env");
 
 export async function GetMovies(req: Request, res: Response): Promise<void> {
-  let { roomCode, userId } = req.query;
+  let { groupId, userId } = req.query;
   // get room genres, providers, and user's page
-  console.log({roomCode, userId});
+  console.log({groupId, userId});
 
-  const { genres, providers, page } = getRoomUserInfo(roomCode as string, userId as string);
-  console.log({genres, providers, page});
+  const { genres, streamingServices, page } = getGroupUserInfo(groupId as string, userId as string);
+  console.log({genres, streamingServices, page});
   res.json(
     await GetMoviesByGenresAndProvider(
       genres.join(","),
-      providers.join(","),
+      streamingServices.join(","),
       page
     )
   );
@@ -80,7 +82,36 @@ export async function GetMoviesByGenresAndProvider(
   }
 }
 
+// gets the top voted movies of the cached group and queries for their details
+export async function GetTopMovies(req: Request, res: Response) {
+  let { groupId } = req.query;
+  
+  try {
+    if (!groupId) {
+      throw new Error("Missing groupId");
+    }
+
+    const topMovieIds = getTopVotedMovies(groupId as string);
+
+    const movies = await Promise.all(
+      topMovieIds.map(async (movieId) => {
+        const details = await moviedb.movieInfo({
+          id: `${movieId}`,
+        });
+        const { id, title, poster_path, overview, release_date, vote_average, genres } = details;
+        return {id, title, poster_path, release_date };
+      })
+    );
+
+    res.json(movies);
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
 export default {
   GetMovies,
   GetMoviesByGenresAndProvider,
+  GetTopMovies,
 };

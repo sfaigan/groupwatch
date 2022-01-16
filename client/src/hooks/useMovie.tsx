@@ -33,7 +33,7 @@ export function useMovie() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `/api/movies/?room=${groupCode}&user=${userId}`
+          `/api/movies/?groupId=${groupCode}&userId=${userId}`
         );
         setMovieList((prevState) => prevState.concat(response.data));
         setLoading(false);

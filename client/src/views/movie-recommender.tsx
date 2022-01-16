@@ -16,8 +16,8 @@ import MovieDetailsChipList from "../components/movie-details-chip-list";
 import MovieVoteButtons from "../components/movie-vote-buttons";
 import { MainContext } from "../context/main";
 import { SocketContext } from "../context/socket";
-import { useMovie } from "../hooks/useMovieList";
-
+import { useMovie } from "../hooks/useMovie";
+import { View } from "../constants";
 
 const USER = {
   id: 1,
@@ -29,11 +29,8 @@ const USER = {
 function formatImageURL(path: string) {
   return `https://image.tmdb.org/t/p/w500${path}`;
 }
-interface Props {
-  setView: any;
-}
 
-export const MovieRecommender = ({ setView }: Props) => {
+export const MovieRecommender = ({ setView }: { setView: (view: View) => void }) => {
   const socket = useContext<any>(SocketContext);
   const { userId, groupCode } = useContext(MainContext);
   const { movie, loading, error, setVote } = useMovie();

@@ -28,7 +28,13 @@ export const GroupStart = ({ setView }: { setView: (view: View) => void }) => {
   // const members = [{name: "shea", type: BadgeType.READY}, {name: "adam", type: BadgeType.READY}, {name: "collin", type: BadgeType.READY}, {name: "Steve", type: BadgeType.NOBADGE}, {name: "Sarah", type: BadgeType.NOBADGE}] // TODO replace this with a call to the server
 
   const onClick = () => {
-      setView(View.RESULT_SUCCESS);
+    socket.emit("startSearch", groupCode, (error: string) => {
+      console.log(`Attempting to join group ${groupCode}...`);
+      if (error) {
+        console.log(error);
+      }
+    });
+    setView(View.MOVIE_RECOMMENDER);
   }
 
   return (
