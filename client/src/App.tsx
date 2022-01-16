@@ -3,6 +3,7 @@ import { createBreakpoints } from '@chakra-ui/theme-tools';
 
 import { CreateGroupScreenOne } from './views/create-group-screen-1';
 import { LandingPage } from "./views/landing-page";
+import { CreateGroupScreenTwo } from './views/create-group-screen-2';
 
 const breakpoints = createBreakpoints({
   sm: '30em',
@@ -18,6 +19,8 @@ export const App = () => {
     render = <LandingPage callback={setView}/>
   } else if (view === 1) {
     render = <CreateGroupScreenOne callback={setView}/>
+  } else if (view === 2) {
+    render = <CreateGroupScreenTwo callback={setView}/>
   } else {
     render = <LandingPage callback={setView}/>
   }
