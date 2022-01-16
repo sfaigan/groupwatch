@@ -20,7 +20,7 @@ export function useMovie() {
   const { userId, groupCode } = useContext(MainContext);
 
   const [movieList, setMovieList] = useState<Movie[]>([]);
-  const [movie, setMovie] = useState<Movie>({} as Movie);
+  const [movie, setMovie] = useState<Movie | null>(null);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -51,6 +51,9 @@ export function useMovie() {
   // has to be called after vote is changed
   // TODO: make this more efficient
   useEffect(() => {
+    if (!movie) {
+      setMovie(movieList[0]);
+    }
     if (vote) {
       setMovieList(movieList.slice(1));
       setMovie(movieList[0]);

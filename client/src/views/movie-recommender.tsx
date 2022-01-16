@@ -19,48 +19,42 @@ import { SocketContext } from "../context/socket";
 import { useMovie } from "../hooks/useMovie";
 import { View } from "../constants";
 
-const USER = {
-  id: 1,
-  name: "John Doe",
-  isHost: true,
-  isReady: true,
-};
-
 function formatImageURL(path: string) {
   return `https://image.tmdb.org/t/p/w500${path}`;
 }
 
 export const MovieRecommender = ({ setView }: { setView: (view: View) => void }) => {
   const socket = useContext<any>(SocketContext);
-  const { userId, groupCode } = useContext(MainContext);
+  const { userId, isHost, groupCode } = useContext(MainContext);
   const { movie, loading, error, setVote } = useMovie();
 
   const handleMovieVote = (vote: "yes" | "no" | "maybe") => {
-    socket.connect();
-    socket.emit(
-      "movieVote",
-      userId,
-      groupCode,
-      movie.id,
-      vote,
-      (error: string) => {
-        console.log(`Voting ${vote} for ${movie.title}.`);
-        if (error) {
-          console.log(error);
+    if (movie) {
+      console.log("Voting...");
+      socket.emit(
+        "movieVote",
+        groupCode,
+        movie.id,
+        vote,
+        (error: string) => {
+          console.log(`Voting ${vote} for ${movie.title}.`);
+          if (error) {
+            console.log(error);
+            return;
+          }
+          setVote(true);
+          console.log(`Successfully voted ${vote} for ${movie.title}.`);
           return;
         }
-        setVote(true);
-        console.log(`Successfully voted ${vote} for ${movie.title}.`);
-        return;
-      }
-    );
+      );
+    }
   };
 
   return (
     <ChakraProvider theme={theme}>
       <Box textAlign="center" fontSize="xl">
         <Grid p={4}>
-          {USER.isHost && (
+          {isHost && (
             <Button
               backgroundColor={theme.colors.red[400]}
               justifySelf="flex-start"

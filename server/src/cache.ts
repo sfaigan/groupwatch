@@ -393,21 +393,49 @@ export function setUserVote(
   vote: Vote
 ) {
   const group = groupCache.get<Group>(groupId);
-  groupCache.set(groupId, {
-    ...group,
-    movies: {
-      ...group!.movies,
-      [movieId]: {
-        ...group!.movies[movieId],
-        userVotes: {
-          ...group!.movies[movieId].userVotes,
-          [userId]: {
-            vote,
+
+
+  if (!group?.movies[movieId]) {
+    const yesCount = vote === VOTE_YES ? 1 : 0;
+    const maybeCount = vote === VOTE_MAYBE ? 1 : 0;
+    const noCount = vote === VOTE_NO ? 1 : 0;
+    const userVotes: UserMovieVotes = {[userId]: { vote }};
+    const movie = {
+      yesCount,
+      maybeCount,
+      noCount,
+      userVotes,
+    }
+
+    groupCache.set(groupId, {
+      ...group,
+      movies: {
+        ...group!.movies,
+        [movieId]: movie,
+      },
+    });
+  } else {
+    const yesCount = vote === VOTE_YES ? group!.movies[movieId].yesCount+1 : group!.movies[movieId].yesCount;
+    const maybeCount = vote === VOTE_MAYBE ? group!.movies[movieId].maybeCount+1 : group!.movies[movieId].maybeCount;
+    const noCount = vote === VOTE_NO ? group!.movies[movieId].noCount+1 : group!.movies[movieId].noCount;
+    groupCache.set(groupId, {
+      ...group,
+      movies: {
+        ...group!.movies,
+        [movieId]: {
+          yesCount,
+          maybeCount,
+          noCount,
+          userVotes: {
+            ...group!.movies[movieId]?.userVotes,
+            [userId]: {
+              vote,
+            },
           },
         },
       },
-    },
-  });
+    });
+  }
 }
 
 export function getMovieData(groupId: string, movieId: number) {

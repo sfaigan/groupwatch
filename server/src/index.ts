@@ -16,7 +16,7 @@ import {
   getUser,
   getUsersInGroup,
 } from "./controllers/groups";
-import { addGroup, addUserToGroupCache, createCache, removeUserFromGroup, updateGroupData } from "./cache";
+import { addGroup, addUserToGroupCache, createCache, getGroupSize, getYesVotes, incrementMaybeCountByUser, incrementNoCountByUser, incrementYesCountByUser, removeUserFromGroup, setUserVote, updateGroupData } from "./cache";
 import { union } from "./helper";
 
 dotenv.config({ path: path.resolve(__dirname, "../../.env") });
@@ -112,6 +112,26 @@ io.on("connection", (socket) => {
       updateGroupData(groupId, "genres", genres);
     }
 
+    callback();
+  })
+
+  socket.on("movieVote", (groupId, movieId, vote, callback) => {
+    console.log("Accepting vote...");
+    setUserVote(groupId, socket.id, movieId, vote);
+    // switch (vote) {
+    //   case "yes": 
+    //     incrementYesCountByUser(groupId, movieId, socket.id);
+    //   case "maybe": 
+    //     incrementMaybeCountByUser(groupId, movieId, socket.id);
+    //   case "no": 
+    //   default:
+    //     incrementNoCountByUser(groupId, movieId, socket.id);
+    // }
+    const groupSize = getGroupSize(groupId);
+    const yesVotes = getYesVotes(groupId, movieId)
+    if (groupSize === yesVotes.length) {
+      console.log("Match found");
+    }
     callback();
   })
 

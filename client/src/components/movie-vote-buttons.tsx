@@ -16,7 +16,7 @@ const MovieVoteButtons = ({handleMovieVote}: Props) => {
           margin={3}
           backgroundColor={theme.colors.red[400]}
           size="lg"
-          onClick={() => handleMovieVote("yes")}
+          onClick={() => handleMovieVote("no")}
         >
           No
         </Button>
@@ -26,7 +26,6 @@ const MovieVoteButtons = ({handleMovieVote}: Props) => {
           backgroundColor={theme.colors.blue[400]}
           size="lg"
           onClick={() => handleMovieVote("maybe")}
-
         >
           Maybe
         </Button>
@@ -35,7 +34,7 @@ const MovieVoteButtons = ({handleMovieVote}: Props) => {
           margin={3}
           backgroundColor={theme.colors.green[400]}
           size="lg"
-          onClick={() => handleMovieVote("no")}
+          onClick={() => handleMovieVote("yes")}
         >
           Yes
         </Button>
