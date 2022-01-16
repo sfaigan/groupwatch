@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useState, useContext } from "react"
+import React, { SyntheticEvent, useState, useContext, useEffect } from "react"
 
 import {
     ChakraProvider,
@@ -18,12 +18,22 @@ import { ButtonCheckBox } from "../components/button-checkbox";
 import { View, Genre } from "../constants";
 import { MainContext } from "../context/main";
 import { SocketContext } from "../context/socket";
+import { UsersContext } from "../context/users";
 
 export const CreateGroupStepTwo = ({ setView }: { setView: (view: View) => void }) => {
   const socket = useContext<any>(SocketContext);
+  const { setUsers } = useContext(UsersContext);
   const [isDisabled, setDisabled] = useState(false);
   const { groupCode, name, streamingServices, genres, setGenres } = useContext(MainContext);
   const toast = useToast();
+
+  useEffect(() => {
+    socket.on("users", (users: any): void => {
+      console.log("Users updated.");
+      console.log(users);
+      setUsers(users)
+    })
+  });
 
   const updateGenres = (genre: number) => {
     const index = genres.findIndex((value: number) => value === genre);

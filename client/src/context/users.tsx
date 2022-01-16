@@ -1,6 +1,6 @@
 import { useState, createContext, ReactNode } from 'react'
 
-interface User {
+export interface User {
   name: string;
   groupId: string;
   streamingServices?: number[];

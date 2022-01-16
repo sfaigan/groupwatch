@@ -52,13 +52,6 @@ export const LandingPage = ({ setView }: { setView: (view: View) => void }) => {
     setCreateDisabled(!(newVal.length > 0));
     setName(newVal);
   }
-  // useEffect(() => {
-  //   socket.on("users", (user: any): void => {
-  //     console.log("HELLO!");
-  //     console.log(user);
-  //     setUserId(user);
-  //   })
-  // });
 
   return (
     <ChakraProvider theme={theme}>

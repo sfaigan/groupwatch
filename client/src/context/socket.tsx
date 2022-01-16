@@ -2,9 +2,9 @@ import { createContext, ReactNode } from "react";
 import io from "socket.io-client";
 
 const SocketContext = createContext({});
+const socket = io({ autoConnect: false });
 
 const SocketProvider = ({ children }: { children: ReactNode }): JSX.Element => {
-  const socket = io({ autoConnect: false })
   return (
     <SocketContext.Provider value={socket}>
         { children }

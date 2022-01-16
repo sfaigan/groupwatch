@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useState } from "react"
+import React, { SyntheticEvent, useState, useContext, useEffect } from "react"
 
 import {
     ChakraProvider,
@@ -16,62 +16,69 @@ import { ColorModeSwitcher } from "../ColorModeSwitcher"
 import { MemberEntry } from "../components/member-entry";
 import { BadgeType } from "../constants";
 import { View } from "../constants";
+import { MainContext } from "../context/main";
+import { User, UsersContext } from "../context/users";
+import { SocketContext } from "../context/socket";
 
 export const GroupStart = ({ setView }: { setView: (view: View) => void }) => {
-    const [isDisabled, setDisabled] = useState(false);
-    
-    const members = [{name: "shea", type: BadgeType.READY}, {name: "adam", type: BadgeType.READY}, {name: "collin", type: BadgeType.READY}, {name: "Steve", type: BadgeType.NOBADGE}, {name: "Sarah", type: BadgeType.NOBADGE}] // TODO replace this with a call to the server
+  const { groupCode } = useContext(MainContext);
+  const { users, setUsers } = useContext(UsersContext);
+  const socket = useContext<any>(SocketContext);
+  const [isDisabled, setDisabled] = useState(false);
+  
+  // const members = [{name: "shea", type: BadgeType.READY}, {name: "adam", type: BadgeType.READY}, {name: "collin", type: BadgeType.READY}, {name: "Steve", type: BadgeType.NOBADGE}, {name: "Sarah", type: BadgeType.NOBADGE}] // TODO replace this with a call to the server
 
-    const onClick = () => {
-       setView(View.RESULT_SUCCESS);
-    }
+  const onClick = () => {
+      setView(View.RESULT_SUCCESS);
+  }
 
-    const code = "XXXXXX";
+  return (
+    <ChakraProvider theme={theme}>
+      <Box fontSize="xl">
+        <Grid p={10}>
+          <ColorModeSwitcher justifySelf="flex-end" />
+          <VStack spacing={1}>
+            <Text 
+              fontWeight='bold'
+              fontSize='md'
+            >
+              Share this code with your group
+            </Text>
+            <Text 
+              fontWeight={'bold'}
+              fontSize="4xl"
+            >
+              Group: {groupCode}
+            </Text>
 
-    return (
-      <ChakraProvider theme={theme}>
-        <Box fontSize="xl">
-          <Grid p={10}>
-            <ColorModeSwitcher justifySelf="flex-end" />
-            <VStack spacing={1}>
-              <Text 
-                fontWeight='bold'
-                fontSize='md'
-              >
-                Share this code with your group
-              </Text>
-              <Text 
-                fontWeight={'bold'}
-                fontSize="4xl"
-              >
-                Group: {code}
-              </Text>
+            <Text 
+              fontWeight={'bold'}
+              fontSize="2xl"
+              alignSelf='start'
+            >
+              Party
+            </Text>
 
-              <Text 
-                fontWeight={'bold'}
-                fontSize="2xl"
-                alignSelf='start'
-              >
-                Party
-              </Text>
+            <Box height='75%' pb={10} overflowY="scroll">
+              {
+                Object.keys(users).map((key: string) => {
+                  const user = users[key];
+                  return <MemberEntry text={user.name} type={BadgeType.READY}/>
+                })
+              }
+            </Box>
 
-              <Box height='75%' pb={10} overflow="scroll">
-                {members.map((member, index) => (
-                  <MemberEntry text={member.name} type={member.type}/>
-                ))}
-              </Box>
-
-              <Text 
-                fontWeight='bold'
-                fontSize='md'
-                position='relative'
-              >
-                You can start the list when everyone is ready.
-              </Text>
-              <Button colorScheme={'purple'} size='md' width='80%' isDisabled={isDisabled} onClick={onClick}>Start</Button>
-            </VStack>
-          </Grid>
-        </Box>
-      </ChakraProvider>
-    )
+            <Text 
+              fontWeight='bold'
+              fontSize='md'
+              position='relative'
+            >
+              You can start the list when everyone is ready.
+            </Text>
+            <Button colorScheme={'purple'} size='md' width='80%' isDisabled={isDisabled} onClick={onClick}>Start</Button>
+          </VStack>
+        </Grid>
+      </Box>
+    </ChakraProvider>
+  )
 }
