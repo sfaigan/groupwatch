@@ -31,7 +31,7 @@ export const CreateGroupScreenOne = (props: Props) =>{
     return (
       <ChakraProvider theme={theme}>
         <Box fontSize="xl">
-          <Grid minH="100vh" p={3}>
+          <Grid p={3}>
             <ColorModeSwitcher justifySelf="flex-end" />
             <VStack spacing={1}>
               <Text 
