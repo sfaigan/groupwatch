@@ -19,3 +19,16 @@ export const GENRE_MAP = {
   10752: "War",
   37: "Western",
 };
+
+export const PROVIDER_MAP = {
+  8: "Netflix",
+  9: "Amazon Prime Video",
+  119: "Amazon Prime Video",
+  337: "Disney+",
+  350: "Apple TV+",
+  230: "Crave",
+};
+
+export const VOTE_YES = "yes";
+export const VOTE_NO = "no";
+export const VOTE_MAYBE = "maybe";

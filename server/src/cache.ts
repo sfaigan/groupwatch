@@ -1,4 +1,6 @@
+import { GenreId, ProviderId, Vote } from "./types";
 import NodeCache from "node-cache";
+import { VOTE_MAYBE, VOTE_NO, VOTE_YES } from "./constants";
 
 export const roomCache = new NodeCache({
   stdTTL: 7200, // 2 hours
@@ -8,6 +10,8 @@ export const roomCache = new NodeCache({
 // {
 //   [roomCode: string]: {
 //       groupSize: number,
+//       genres: GenreIDs[],
+//       providers: ProviderIDs[],
 //       users: {
 //          [userId: string]: {
 //              name: string,
@@ -39,8 +43,6 @@ export const roomCache = new NodeCache({
 // roomCache.get(roomCode).movies[movieId].maybeCount -> use in SS movie match logic
 // roomCache.get(roomCode).users[userId].currentPage -> use in movie query
 
-export type Vote = "yes" | "no" | "maybe";
-
 export interface UserCache {
   [userId: string]: {
     page: number;
@@ -64,6 +66,8 @@ export interface MovieCache {
 
 export interface Room {
   groupSize: number;
+  genres: GenreId[];
+  providers: ProviderId[];
   users: UserCache;
   movies: MovieCache;
 }
@@ -72,9 +76,16 @@ export interface RoomCache {
   [roomCode: string]: Room;
 }
 
-export function addRoom(roomCode: string, groupSize = 1) {
+export function addRoom(
+  roomCode: string,
+  genres: GenreId[],
+  providers: ProviderId[],
+  groupSize = 1
+) {
   roomCache.set(roomCode, {
     groupSize,
+    genres,
+    providers,
     users: {},
     movies: {},
   });
@@ -93,7 +104,7 @@ export function incrementYesCountByUser(
 ) {
   roomCache.get<Room>(roomCode)!.movies[movieId].yesCount++;
   roomCache.get<Room>(roomCode)!.movies[movieId].userVotes[userId] = {
-    vote: "yes",
+    vote: VOTE_YES,
   };
 }
 
@@ -107,7 +118,7 @@ export function incrementNoCountByUser(
 ) {
   roomCache.get<Room>(roomCode)!.movies[movieId].noCount++;
   roomCache.get<Room>(roomCode)!.movies[movieId].userVotes[userId] = {
-    vote: "no",
+    vote: VOTE_NO,
   };
 }
 
@@ -124,7 +135,7 @@ export function incrementMaybeCountByUser(
 ) {
   roomCache.get<Room>(roomCode)!.movies[movieId].maybeCount++;
   roomCache.get<Room>(roomCode)!.movies[movieId].userVotes[userId] = {
-    vote: "maybe",
+    vote: VOTE_MAYBE,
   };
 }
 
@@ -151,7 +162,7 @@ export function getYesVotes(roomCode: string, movieId: number) {
   ).filter(
     (userId) =>
       roomCache.get<Room>(roomCode)!.movies[movieId].userVotes[userId].vote ===
-      "yes"
+      VOTE_YES
   );
 }
 
@@ -162,7 +173,7 @@ export function getNoVotes(roomCode: string, movieId: number) {
   ).filter(
     (userId) =>
       roomCache.get<Room>(roomCode)!.movies[movieId].userVotes[userId].vote ===
-      "no"
+      VOTE_NO
   );
 }
 
@@ -173,7 +184,7 @@ export function getMaybeVotes(roomCode: string, movieId: number) {
   ).filter(
     (userId) =>
       roomCache.get<Room>(roomCode)!.movies[movieId].userVotes[userId].vote ===
-      "maybe"
+      VOTE_MAYBE
   );
 }
 
@@ -189,7 +200,7 @@ export function getUserData(roomCode: string, userId: string) {
   return roomCache.get<Room>(roomCode)!.users[userId];
 }
 
-export function setUserData(
+export function addUserToRoom(
   roomCode: string,
   userId: string,
   data: {
@@ -201,6 +212,7 @@ export function setUserData(
   }
 ) {
   roomCache.get<Room>(roomCode)!.users[userId] = data;
+  roomCache.get<Room>(roomCode)!.groupSize++;
 }
 
 export function updateUserData(
@@ -251,6 +263,7 @@ export function getUserIds(roomCode: string) {
 
 export default {
   addRoom,
+  addUserToRoom,
   incrementYesCountByUser,
   incrementNoCountByUser,
   incrementMaybeCountByUser,
@@ -264,7 +277,6 @@ export default {
   getUserPage,
   setUserPage,
   getUserData,
-  setUserData,
   updateUserData,
   getUserVotes,
   setUserVote,
