@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react"
 import { ColorModeSwitcher } from "./ColorModeSwitcher"
 import { Logo } from "./Logo"
-import { LandingPage } from "./views/LandingPage";
+import { LandingPage } from "./views/landing-page";
 
 const breakpoints = createBreakpoints({
   sm: '30em',
