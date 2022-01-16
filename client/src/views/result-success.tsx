@@ -6,6 +6,8 @@ import { MainContext } from "../context/main";
 import { ResultContext } from "../context/result";
 import { formatImageURL } from "../helpers";
 import { Genre, Movie } from "../hooks/useMovie";
+import MovieDetailsChipList from "../components/movie-details-chip-list";
+
 
 export const ResultSuccess = ({
   setView,
@@ -28,7 +30,7 @@ export const ResultSuccess = ({
     setView(View.READY_TO_WATCH);
   };
 
-  var footer = <Text fontWeight="bold">Shea is confirming the movie</Text>;
+  var footer = <Text fontWeight="bold">The host is confirming the movie</Text>;
   if (isHost) {
     footer = (
       <>
@@ -56,6 +58,7 @@ export const ResultSuccess = ({
       </>
     );
   }
+  
   return (
     <Box fontSize="xl">
       <Grid p={5}>
@@ -64,29 +67,20 @@ export const ResultSuccess = ({
           <Text fontWeight="bold" fontSize="4xl">
             Your group picked:
           </Text>
-          <Box width="100%" maxHeight="50%" overflow="hidden">
+          <Box maxHeight="50%" overflow="hidden" textAlign='center'>
             <Image
               src={formatImageURL(result.poster_path)}
               objectFit="cover"
               boxSize="400px"
             />
           </Box>
-          <Box width="100%" textAlign="center">
+          <VStack width="100%" textAlign="center">
             <Text fontSize="4xl" fontWeight="bold">
-              result.title
+              {result.title}
             </Text>
-            <Box display="flex" justifyContent="space-evenly">
-              <Text>result.year</Text>
-              <Text>result.duration</Text>
-              <Text>
-                {result.genres.map((genre: Genre) => genre.name).join(", ")}
-              </Text>
-            </Box>
-            <Box>
-              <Text fontWeight="bold">Available on:</Text>
-              <Text>{result.genres.map((genre: Genre) => genre.name).join(", ")}</Text>
-            </Box>
-          </Box>
+            <Text fontSize="sm">{result.overview}</Text>
+            <MovieDetailsChipList  movie={result}/>
+          </VStack>
           <Box width="100%" pt="1%">
             {footer}
           </Box>
