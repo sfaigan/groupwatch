@@ -4,22 +4,16 @@ import {
     ChakraProvider,
     Box,
     Text,
-    Link,
     VStack,
-    Code,
-    Input,
     Grid,
     theme,
     Button,
     FormControl,
     FormLabel,
     Switch,
-    ButtonGroup,
     Checkbox,
   } from "@chakra-ui/react"
   import { ColorModeSwitcher } from "../ColorModeSwitcher"
-  import { Logo } from "../Logo"
-import { callbackify } from "util"
 
 export interface Props {
     callback: any;
