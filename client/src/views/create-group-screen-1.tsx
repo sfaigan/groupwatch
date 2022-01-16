@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useState } from "react"
+import { useState } from "react"
 
 import {
     ChakraProvider,
@@ -13,19 +13,16 @@ import {
     Switch,
     Checkbox,
   } from "@chakra-ui/react"
-  import { ColorModeSwitcher } from "../ColorModeSwitcher"
+
+import { ColorModeSwitcher } from "../ColorModeSwitcher"
+import { ButtonCheckBox } from "../components/button-checkbox";
 
 export interface Props {
     callback: any;
 }
 
 export const CreateGroupScreenOne = (props: Props) =>{
-    const [isDisabled, setDisabled] = useState(false);
-    const [isNetflixChosen, setNetflixChosen] = useState(false);
-    const [isDisneyChosen, setDisneyChosen] = useState(false);
-    const [isAmazonChosen, setAmazonChosen] = useState(false);
-    const [isAppleChosen, setAppleChosen] = useState(false);
-    const [isCraveChosen, setCraveChosen] = useState(false);
+    const [isDisabled, setDisabled] = useState(false); // TODO button is disabled if <1 option checked
 
     const onClick = () => {
        props.callback(2);
@@ -58,26 +55,11 @@ export const CreateGroupScreenOne = (props: Props) =>{
                 <Switch id='in-person'/>
               </FormControl>
               <Text>What streaming services are you subscribed to?</Text>
-              <Button justifyContent='space-between' colorScheme='purple' variant='outline' width='80%' isActive={isNetflixChosen} onClick={() => setNetflixChosen(!isNetflixChosen)}>
-                Netflix
-                <Checkbox isChecked={isNetflixChosen}/>
-              </Button>
-              <Button justifyContent='space-between' colorScheme='purple' variant='outline' width='80%'  isActive={isDisneyChosen} onClick={() => setDisneyChosen(!isDisneyChosen)}>
-                Disney Plus
-                <Checkbox isChecked={isDisneyChosen}/>
-              </Button>
-              <Button justifyContent='space-between' colorScheme='purple' variant='outline' width='80%'  isActive={isAmazonChosen} onClick={() => setAmazonChosen(!isAmazonChosen)}>
-                Amazon Prime
-                <Checkbox isChecked={isAmazonChosen}/>
-              </Button>
-              <Button justifyContent='space-between' colorScheme='purple' variant='outline' width='80%'  isActive={isAppleChosen} onClick={() => setAppleChosen(!isAppleChosen)}>
-                Apple TV Plus
-                <Checkbox isChecked={isAppleChosen}/>
-              </Button>
-              <Button justifyContent='space-between' colorScheme='purple' variant='outline' width='80%'  isActive={isCraveChosen} onClick={() => setCraveChosen(!isCraveChosen)}>
-                Crave
-                <Checkbox isChecked={isCraveChosen}/>
-              </Button>
+              <ButtonCheckBox text="Netflix"/>
+              <ButtonCheckBox text="Disney Plus"/>
+              <ButtonCheckBox text="Amazon Prime"/>
+              <ButtonCheckBox text="Apple TV Plus"/>
+              <ButtonCheckBox text="Crave"/>
               <Button colorScheme={'purple'} size='md' width='80%' isDisabled={isDisabled} onClick={onClick}>Next</Button>
             </VStack>
           </Grid>
