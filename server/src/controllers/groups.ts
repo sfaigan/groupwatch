@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
+import { randomBytes } from "crypto";
 
-interface User {
+export interface User {
   name: string;
   groupId: string;
   streamingServices?: number[];
@@ -9,14 +10,23 @@ interface User {
 
 const users: { [id: string]: User } = {};
 
-export const addUserToGroup = (userId: string, userName: string, groupId: string): { userId?: string, user?: User, error?: string } => {
+export const addUserToGroup = (userId: string, name: string, streamingServices: number[], genres: number[], groupId?: string) => {
   if (!groupId) {
+    groupId = randomBytes(3).toString("hex").toString().toUpperCase();
+  } else if (!groupExists(groupId)) {
     return { error: `Unable to find group with ID ${groupId}`};
   }
 
-  const user = { name: userName.trim(), groupId: groupId };
+  const user = {
+    name: name.trim(),
+    groupId,
+    streamingServices,
+    genres,
+  };
+
   users[userId] = user;
-  return { userId, user };
+  console.log(getUsersInGroup(groupId));
+  return { groupId, user };
 }
 
 export const getUser = (userId: string): User | undefined => {
@@ -25,6 +35,10 @@ export const getUser = (userId: string): User | undefined => {
 
 export const getUsersInGroup = (groupId: string) => {
   return Object.fromEntries(Object.entries(users).filter(([userId, user]) => user.groupId === groupId));
+}
+
+export const groupExists = (groupId: string) => {
+  return Object.entries(users).filter(([userId, user]) => user.groupId === groupId).length > 0;
 }
 
 export const deleteUser = (userId: string): { groupId: string, userId: string, userName: string } | null => {

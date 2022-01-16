@@ -7,7 +7,6 @@ import compression from "compression";
 import movieRouter from "./routes/movieRouter";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { randomBytes } from "crypto";
 
 import pingRouter from "./routes/ping";
 import groupsRouter from "./routes/groups";
@@ -57,12 +56,11 @@ export const io = new Server(server);
 
 io.on("connection", (socket) => {
   console.log(`Socket ${socket.id} connected.`);
-  socket.on("createGroup", (name, callback) => {
+  socket.on("createGroup", (name, streamingServices, genres, callback) => {
     console.log(`Socket ${socket.id} creating a group...`);
-    const groupId = randomBytes(3).toString("hex").toString().toUpperCase();
-    const { userId, user, error } = addUserToGroup(socket.id, name, groupId);
+    const { groupId, user, error } = addUserToGroup(socket.id, name, streamingServices, genres);
 
-    if (error || !userId || !user) {
+    if (error || !user || !groupId) {
       return callback(error, undefined);
     }
 
@@ -75,11 +73,11 @@ io.on("connection", (socket) => {
     callback(groupId);
   });
 
-  socket.on("joinGroup", (name, groupId, callback) => {
+  socket.on("joinGroup", (groupId, name, streamingServices, genres, callback) => {
     console.log(`Socket ${socket.id} joining a group...`);
-    const { userId, user, error } = addUserToGroup(socket.id, name, groupId);
+    const { user, error } = addUserToGroup(socket.id, name, streamingServices, genres, groupId);
 
-    if (error || !userId || !user) {
+    if (error || !user) {
       return callback(error);
     }
 

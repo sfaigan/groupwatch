@@ -11,20 +11,28 @@ import {
     FormControl,
     FormLabel,
     Switch,
-    Checkbox,
-    CheckboxGroup,
   } from "@chakra-ui/react"
 import { ColorModeSwitcher } from "../ColorModeSwitcher"
 import { ButtonCheckBox } from "../components/button-checkbox";
-import { View } from "../constants";
+import { View, StreamingService } from "../constants";
 import { MainContext } from "../context/main";
 import { SocketContext } from "../context/socket";
 
 export const CreateGroupStepOne = ({ setView }: { setView: (view: View) => void }) => {
   const [isDisabled, setDisabled] = useState(false); // TODO button is disabled if <1 option checked
-  
-  const socket = useContext<any>(SocketContext);
   const { streamingServices, setStreamingServices } = useContext(MainContext);
+
+  const updateStreamingServices = (streamingService: number) => {
+    const index = streamingServices.findIndex((value: number) => value === streamingService);
+    const temp = streamingServices;
+    if (index >= 0) {
+      temp.splice(index);
+      setStreamingServices(temp);
+    } else {
+      temp.push(streamingService);
+      setStreamingServices(temp);
+    }
+  }
 
   const onClick = () => {
       setView(View.CREATE_GROUP_STEP_TWO);
@@ -57,13 +65,14 @@ export const CreateGroupStepOne = ({ setView }: { setView: (view: View) => void 
               <Switch id='in-person'/>
             </FormControl>
             <Text>What streaming services are you subscribed to?</Text>
-            <CheckboxGroup>
-              <ButtonCheckBox text="Netflix"/>
-              <ButtonCheckBox text="Disney Plus"/>
-              <ButtonCheckBox text="Amazon Prime"/>
-              <ButtonCheckBox text="Apple TV Plus"/>
-              <ButtonCheckBox text="Crave"/>
-            </CheckboxGroup>
+            {
+              Object.keys(StreamingService).map((key: string) => {
+                return <ButtonCheckBox
+                  onSelect= {() => updateStreamingServices(StreamingService[key].id)}
+                  text={StreamingService[key].text}
+                />
+              })
+            }
             <Button colorScheme={'purple'} size='md' width='80%' isDisabled={isDisabled} onClick={onClick}>Next</Button>
           </VStack>
         </Grid>

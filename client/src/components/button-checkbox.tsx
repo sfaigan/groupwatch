@@ -1,19 +1,24 @@
 import { useState } from "react"
 import {
-    Button,
-    Checkbox,
-  } from "@chakra-ui/react"
-export interface Props {
-    text: string;
-    //callback: any; //TODO allow parent to see whether this is selected
+  Button,
+  Checkbox,
+} from "@chakra-ui/react"
+
+interface Props {
+  text: string;
+  onSelect: () => void;
 }
 
-export const ButtonCheckBox = (props: Props) => {
-    const [isChosen, setChosen] = useState(false);
-    return (
-        <Button justifyContent='space-between' colorScheme='purple' variant='outline' width='80%' isActive={isChosen} onClick={() => setChosen(!isChosen)}>
-                {props.text}
-                <Checkbox isChecked={isChosen}/>
-        </Button>
-    )
+export const ButtonCheckBox = ({ text, onSelect }: Props) => {
+  const [selected, setSelected] = useState(false);
+  const onClick = () => {
+    setSelected(!selected);
+    onSelect();
+  }
+  return (
+    <Button justifyContent='space-between' colorScheme='purple' variant='outline' width='80%' isActive={selected} onClick={onClick}>
+      {text}
+      <Checkbox isChecked={selected}/>
+    </Button>
+  )
 }
