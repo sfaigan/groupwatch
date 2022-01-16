@@ -7,6 +7,7 @@ export enum View {
   RESULT_FAILURE,
   READY_TO_WATCH,
   MOVIE_VOTE_RESULTS,
+  MOVIE_RECOMMENDER,
 }
 
 export enum BadgeType {

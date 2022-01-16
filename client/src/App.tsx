@@ -13,6 +13,7 @@ import { ResultSuccess } from './views/result-success';
 import { ReadyToWatch } from './views/ready-to-watch';
 import { ResultFailure } from './views/result-failure';
 import { MovieVoteResults } from './views/movie-vote-results';
+import MovieRecommender from './views/movie-recommender';
 
 const breakpoints = createBreakpoints({
   sm: '30em',
@@ -40,6 +41,8 @@ export const App = () => {
         return <ReadyToWatch setView={setView}/>
       case View.MOVIE_VOTE_RESULTS:
         return <MovieVoteResults setView={setView}/>
+      case View.MOVIE_RECOMMENDER:
+        return <MovieRecommender setView={setView}/>
       case View.LANDING:
       default:
         return <LandingPage setView={setView}/>
