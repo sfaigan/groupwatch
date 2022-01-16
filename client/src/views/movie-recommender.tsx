@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import {
   theme,
   Box,
@@ -17,10 +17,8 @@ import { MainContext } from "../context/main";
 import { SocketContext } from "../context/socket";
 import { useMovie } from "../hooks/useMovie";
 import { View } from "../constants";
-
-function formatImageURL(path: string) {
-  return `https://image.tmdb.org/t/p/w500${path}`;
-}
+import { ResultContext } from "../context/result";
+import { formatImageURL } from "../helpers";
 
 export const MovieRecommender = ({
   setView,
@@ -30,6 +28,18 @@ export const MovieRecommender = ({
   const socket = useContext<any>(SocketContext);
   const { userId, isHost, groupCode } = useContext(MainContext);
   const { movie, loading, error, setVote } = useMovie();
+  const { result, setResult } = useContext(ResultContext);
+
+  useEffect(() => {
+    socket.on("matchFound", (movie: any): void => {
+      console.log("Users updated.");
+      console.log(movie);
+      setResult(movie);
+    });
+    if (result?.id) {
+      setView(View.RESULT_SUCCESS);
+    }
+  }, [result]);
 
   const handleMovieVote = (vote: "yes" | "no" | "maybe") => {
     if (movie) {

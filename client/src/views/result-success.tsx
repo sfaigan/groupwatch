@@ -1,8 +1,11 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Box, Text, VStack, Grid, Button, Image } from "@chakra-ui/react";
 import { ColorModeSwitcher } from "../ColorModeSwitcher";
 import { View } from "../constants";
 import { MainContext } from "../context/main";
+import { ResultContext } from "../context/result";
+import { formatImageURL } from "../helpers";
+import { Genre, Movie } from "../hooks/useMovie";
 
 export const ResultSuccess = ({
   setView,
@@ -10,9 +13,15 @@ export const ResultSuccess = ({
   setView: (view: View) => void;
 }) => {
   const { isHost } = useContext(MainContext);
+  const { result, setResult } = useContext(ResultContext);
+
+  useEffect(() => {
+    console.log(result);
+  }, [result]);
 
   const handleNegative = () => {
-    setView(View.LANDING); //TODO resume the list
+    setResult({} as Movie);
+    setView(View.MOVIE_RECOMMENDER);
   };
 
   const handlePositive = () => {
@@ -57,24 +66,25 @@ export const ResultSuccess = ({
           </Text>
           <Box width="100%" maxHeight="50%" overflow="hidden">
             <Image
-              src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.keengamer.com%2Fwp-content%2Fuploads%2F2020%2F09%2FGames-Like-Among-Us-cover.jpg&f=1&nofb=1"
+              src={formatImageURL(result.poster_path)}
               objectFit="cover"
               boxSize="400px"
             />
           </Box>
           <Box width="100%" textAlign="center">
             <Text fontSize="4xl" fontWeight="bold">
-              Movie
+              result.title
             </Text>
             <Box display="flex" justifyContent="space-evenly">
-              <Text>2021</Text>
-              <Text>PG-13</Text>
-              <Text>1h 33 min</Text>
-              <Text>Action</Text>
+              <Text>result.year</Text>
+              <Text>result.duration</Text>
+              <Text>
+                {result.genres.map((genre: Genre) => genre.name).join(", ")}
+              </Text>
             </Box>
             <Box>
               <Text fontWeight="bold">Available on:</Text>
-              <Text>Netflix, Disney Plus, Amazon Prime</Text>
+              <Text>{result.genres.map((genre: Genre) => genre.name).join(", ")}</Text>
             </Box>
           </Box>
           <Box width="100%" pt="1%">

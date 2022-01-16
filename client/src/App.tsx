@@ -15,6 +15,7 @@ import { ResultFailure } from "./views/result-failure";
 import { MovieVoteResults } from "./views/movie-vote-results";
 import MovieRecommender from "./views/movie-recommender";
 import { ChakraProvider, theme } from "@chakra-ui/react";
+import { ResultProvider } from "./context/result";
 
 const breakpoints = createBreakpoints({
   sm: "30em",
@@ -53,9 +54,11 @@ export const App = () => {
   return (
     <MainProvider>
       <UsersProvider>
-        <SocketProvider>
-          <ChakraProvider theme={theme}>{getView()}</ChakraProvider>
-        </SocketProvider>
+        <ResultProvider>
+          <SocketProvider>
+            <ChakraProvider theme={theme}>{getView()}</ChakraProvider>
+          </SocketProvider>
+        </ResultProvider>
       </UsersProvider>
     </MainProvider>
   );

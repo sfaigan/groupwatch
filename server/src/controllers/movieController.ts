@@ -25,6 +25,24 @@ export async function GetMovies(req: Request, res: Response): Promise<void> {
   );
 }
 
+export async function GetMovie(id: string) {
+  const movie = await moviedb.movieInfo({
+    id,
+    append_to_response: "credits",
+  });
+
+  return {
+    id: movie.id,
+    title: movie.title,
+    poster_path: movie.poster_path,
+    overview: movie.overview,
+    release_date: movie.release_date,
+    vote_average: movie.vote_average,
+    genres: movie.genres,
+    duration: movie.runtime,
+  };
+}
+
 export async function GetMoviesByGenresAndProvider(
   genreIds?: string,
   providers?: string,
@@ -52,30 +70,10 @@ export async function GetMoviesByGenresAndProvider(
 
     // gets the details of the movies
     const movies = await Promise.all(
-      res.results.map(async (movie) => {
-        const details = await moviedb.movieInfo({
-          id: `${movie.id}`,
-          append_to_response: "credits",
-        });
-        return details;
-      })
+      res.results.map(async (movie) => GetMovie(`${movie.id}`))
     );
 
-    // filter out movie data that we don't need
-    const filteredMovies = movies.map((movie) => {
-      return {
-        id: movie.id,
-        title: movie.title,
-        poster_path: movie.poster_path,
-        overview: movie.overview,
-        release_date: movie.release_date,
-        vote_average: movie.vote_average,
-        genres: movie.genres,
-        duration: movie.runtime,
-      };
-    });
-
-    return filteredMovies;
+    return movies;
   } catch (err) {
     console.log(err);
     throw err;

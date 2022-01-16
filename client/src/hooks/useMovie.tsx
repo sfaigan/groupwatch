@@ -2,14 +2,16 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { MainContext } from "../context/main";
 
-interface Movie {
+export interface Genre {
+  id: number;
+  name: string;
+}
+
+export interface Movie {
   id: number;
   title: string;
   duration: number;
-  genres: {
-    id: number;
-    name: string;
-  }[];
+  genres: Genre[];
   overview: string;
   release_date: string;
   vote_average: number;
