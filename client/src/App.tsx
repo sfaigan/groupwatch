@@ -10,6 +10,7 @@ import { UsersProvider } from "./context/users"
 import { SocketProvider } from "./context/socket"
 import { View } from './constants';
 import { ResultSuccess } from './views/result-success';
+import { ReadyToWatch } from './views/ready-to-watch';
 
 const breakpoints = createBreakpoints({
   sm: '30em',
@@ -31,6 +32,8 @@ export const App = () => {
         return <GroupStart setView={setView}/>
       case View.RESULT_SUCCESS:
         return <ResultSuccess setView={setView} />
+      case View.READY_TO_WATCH:
+        return <ReadyToWatch setView={setView} />
       case View.LANDING:
       default:
         return <LandingPage setView={setView}/>

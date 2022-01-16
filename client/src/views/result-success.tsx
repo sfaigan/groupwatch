@@ -1,5 +1,3 @@
-import React, { SyntheticEvent, useState } from "react"
-
 import {
     ChakraProvider,
     Box,
@@ -8,9 +6,6 @@ import {
     Grid,
     theme,
     Button,
-    FormControl,
-    FormLabel,
-    Switch,
     Image,
   } from "@chakra-ui/react"
 import { ColorModeSwitcher } from "../ColorModeSwitcher"
@@ -18,16 +13,13 @@ import { View } from "../constants";
 
 export const ResultSuccess = ({ setView }: { setView: (view: View) => void }) => {
     
-    const genres = ["Drama", "Action", "Comedy", "Horror", "Thriller", "Science Fiction", "Romance", "Documentary"]
-
     const handleNegative = () => {
        setView(View.LANDING); //TODO resume the list
     }
 
     const handlePositive = () => {
-      setView(View.LANDING); //TODO final screen
+      setView(View.READY_TO_WATCH);
     }
-
 
     return (
       <ChakraProvider theme={theme}>

@@ -4,6 +4,7 @@ export enum View {
   CREATE_GROUP_STEP_TWO,
   GROUP_START,
   RESULT_SUCCESS,
+  READY_TO_WATCH,
 }
 
 export enum BadgeType {
