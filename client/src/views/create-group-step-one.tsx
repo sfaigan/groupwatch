@@ -19,7 +19,7 @@ import { MainContext } from "../context/main";
 import { SocketContext } from "../context/socket";
 
 export const CreateGroupStepOne = ({ setView }: { setView: (view: View) => void }) => {
-  const [isDisabled, setDisabled] = useState(false); // TODO button is disabled if <1 option checked
+  const [isDisabled, setDisabled] = useState(true);
   const { streamingServices, setStreamingServices } = useContext(MainContext);
 
   const updateStreamingServices = (streamingService: number) => {
@@ -32,6 +32,7 @@ export const CreateGroupStepOne = ({ setView }: { setView: (view: View) => void 
       temp.push(streamingService);
       setStreamingServices(temp);
     }
+    setDisabled(!(temp.length > 0)); //todo fix unselect bug
   }
 
   const onClick = () => {
@@ -46,13 +47,6 @@ export const CreateGroupStepOne = ({ setView }: { setView: (view: View) => void 
           <VStack spacing={1}>
             <Text 
               fontWeight={'bold'}
-              // width={[
-              //   '100%',
-              //   null,
-              //   null,
-              //   null,
-              //   null,
-              // ]}
               fontSize='xl'
             >
               You are group leader.
