@@ -2,16 +2,20 @@
   "name": "groupwatch",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./server/build/index.js",
   "scripts": {
-    "client:dev": "(cd client && npm run start);",
-    "client:build": "(cd client && npm run build);",
-    "server:dev": "(cd server && npm run dev);",
-    "server:prod": "(cd server && npm run start);",
+    "prestart": "npm run build",
+    "client:dev": "cd client && npm run start",
+    "client:build": "cd client && npm run build",
+    "server:dev": "cd server && npm run dev",
+    "server:build": "cd server && npm run build",
+    "server:prod": "cd server && npm run start",
     "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
-    "prod": "npm run client:build && npm run server:prod",
+    "build": "(npm run client:build); (npm run server:build);",
+    "start": "npm run server:prod",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "(cd client && npm install); (cd server && npm install);"
+    "postinstall": "(cd client && npm install); (cd server && npm install);",
+    "heroku-postbuild": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -43,4 +47,7 @@
     "jest-dom": "^4.0.0",
     "react-testing-library": "^8.0.1"
   }
+  "engines": {
+    "node": "16.13.2"
+  },
 }
