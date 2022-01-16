@@ -1,5 +1,8 @@
 import { roomCache } from "./cache";
 
+/*
+ * Generates a new room (with room code), inserts into cache, and returns the room code.
+ */
 export function generateRoom(): string {
   // generate a room code
   const code = generateRoomCode();
@@ -21,6 +24,9 @@ export function generateRoom(): string {
   }
 }
 
+/*
+ * Generates a random room code.
+ */
 function generateRoomCode() {
   const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   let code = "";
