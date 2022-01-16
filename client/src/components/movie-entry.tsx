@@ -23,7 +23,6 @@ if (selected) {
       <Button rightIcon={<InfoOutlineIcon />} justifyContent='space-between' colorScheme='purple' variant='outline' width='100%' onClick={onOpen}>
         {text}
       </Button>
-      {/* <IconButton colorScheme='purple' variant='outline' aria-label='Info' icon={} /> */}
       <Button colorScheme='purple' variant='outline' isActive={selected} onClick={onSelect}>{badgeLabel}</Button>
     </ButtonGroup>
   )

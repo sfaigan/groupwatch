@@ -1,8 +1,6 @@
-import { useState } from "react"
 import {
     Badge,
     Button,
-    Checkbox,
   } from "@chakra-ui/react"
 import { BadgeProps, BadgeType } from "../constants"
 export interface Props {
