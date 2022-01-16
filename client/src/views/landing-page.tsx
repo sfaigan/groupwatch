@@ -25,24 +25,30 @@ export interface Props {
 }
 
 export const LandingPage = ({ setView }: { setView: (view: View) => void }) => {
-  const { name, setName, groupCode, setGroupCode } = useContext(MainContext);
+  const { name, setName, setGroupCode } = useContext(MainContext);
   // const { setUserId } = useContext(UsersContext);
   const [isJoinDisabled, setJoinDisabled] = useState(true);
   const [isCreateDisabled, setCreateDisabled] = useState(true);
+  const [groupCodeInput, setGroupCodeInput] = useState("");
 
-  const handleGroupCodeChange = (event: any) => {
+  const handleGroupCodeInputChange = (event: any) => {
     const newVal = event.target.value.toUpperCase();
     if (newVal.length <= 6 && /^[A-Z0-9]*$/g.test(newVal)) {
-      setGroupCode(newVal);
+      setGroupCodeInput(newVal);
       setJoinDisabled(!(name.length > 0 && newVal.length === 6));
     } else {
-      setJoinDisabled(!(name.length > 0 && groupCode.length === 6));
+      setJoinDisabled(!(name.length > 0 && groupCodeInput.length === 6));
     }
   };
+
+  const onClickJoinGroup = () => {
+    setGroupCode(groupCodeInput);
+    setView(View.CREATE_GROUP_STEP_ONE)
+  }
   
   const handleNameChange = (event: any) => {
     const newVal = event.target.value;
-    setJoinDisabled(!(groupCode.length === 6 && newVal.length > 0));
+    setJoinDisabled(!(groupCodeInput.length === 6 && newVal.length > 0));
     setCreateDisabled(!(newVal.length > 0));
     setName(newVal);
   }
@@ -87,11 +93,11 @@ export const LandingPage = ({ setView }: { setView: (view: View) => void }) => {
             </Text>
             <Input 
               placeholder='Enter group code'
-              value={groupCode}
-              onChange={handleGroupCodeChange}
+              value={groupCodeInput}
+              onChange={handleGroupCodeInputChange}
               //width=...
             />
-            <Button colorScheme={'purple'} isDisabled={isJoinDisabled} onClick={() => setView(View.CREATE_GROUP_STEP_ONE)}>Join Group</Button>
+            <Button colorScheme={'purple'} isDisabled={isJoinDisabled} onClick={onClickJoinGroup}>Join Group</Button>
           </VStack>
         </Grid>
       </Box>

@@ -119,7 +119,7 @@ export const CreateGroupStepTwo = ({ setView }: { setView: (view: View) => void 
                 />
               })
             }
-            <Button colorScheme={'purple'} size='md' width='80%' isDisabled={isDisabled} onClick={handleCreateGroup}>Create Group</Button>
+            <Button colorScheme={'purple'} size='md' width='80%' isDisabled={isDisabled} onClick={groupCode ? handleJoinGroup : handleCreateGroup}>Create Group</Button>
           </VStack>
         </Grid>
       </Box>
